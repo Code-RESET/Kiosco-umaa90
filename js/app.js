@@ -187,7 +187,7 @@ function leyenda(sel){
 function nucleo(){
   return '<circle cx="450" cy="165" r="92" fill="#eef2f0" stroke="#a9b7b0" stroke-width="3"/>' +
     '<rect x="438" y="120" width="44" height="58" rx="4" fill="#5b6b66"/><line x1="460" y1="122" x2="460" y2="176" stroke="#eef2f0" stroke-width="2"/>' +
-    '<text x="460" y="222" font-size="15" font-weight="700" fill="#10231c" text-anchor="middle">Elevador</text>' +
+    '<text x="460" y="112" font-size="15" font-weight="700" fill="#10231c" text-anchor="middle">Elevador</text>' +
     '<rect x="402" y="128" width="20" height="42" rx="3" fill="#10231c"/>';
 }
 /* Huellas que "caminan" a lo largo de la ruta */
@@ -221,8 +221,12 @@ function flecha(x, y, dir){
     '<path d="M0 0 L-26 -30 L-11 -30 L-11 -66 L11 -66 L11 -30 L26 -30 Z" fill="var(--here)" stroke="#fff" stroke-width="4" stroke-linejoin="round"/></g></g>';
 }
 function aqui(on){
-  return on ? '<circle class="here-dot" cx="' + KIOSCO.x + '" cy="' + KIOSCO.y + '" r="13" fill="var(--here)" stroke="#fff" stroke-width="4"/>' +
-    '<text x="' + (KIOSCO.x - 18) + '" y="' + (KIOSCO.y + 38) + '" font-size="16" font-weight="700" fill="var(--here)" text-anchor="middle">Usted está aquí</text>' : '';
+  // Punto "Usted se encuentra aquí": anillo que late + etiqueta con fondo para que se lea sobre cualquier color
+  if (!on) return '';
+  return '<circle class="here-ring" cx="' + KIOSCO.x + '" cy="' + KIOSCO.y + '" r="16" fill="none" stroke="var(--here)" stroke-width="4"/>' +
+    '<circle class="here-dot" cx="' + KIOSCO.x + '" cy="' + KIOSCO.y + '" r="15" fill="var(--here)" stroke="#fff" stroke-width="4"/>' +
+    '<rect x="' + (KIOSCO.x - 112) + '" y="' + (KIOSCO.y + 22) + '" width="200" height="30" rx="15" fill="var(--here)"/>' +
+    '<text x="' + (KIOSCO.x - 12) + '" y="' + (KIOSCO.y + 43) + '" font-size="16" font-weight="700" fill="#fff" text-anchor="middle">Usted se encuentra aquí</text>';
 }
 function escalera(x, y){
   var h = '<rect x="' + x + '" y="' + y + '" width="42" height="58" rx="4" fill="#fff" stroke="var(--c-serv)" stroke-width="3"/>';
@@ -272,7 +276,8 @@ function mapaPA(dest, zoom){
     if (fs) h += flecha(310, 108, 0);
     else if (r) h += flecha(r.x + r.w / 2, r.y + 2, 0);
   }
-  if (!enPA) h += '<text x="560" y="120" font-size="16" font-weight="700" fill="var(--route)">← llega por el elevador</text>';
+  if (!enPA && !zoom) h += '<circle cx="460" cy="185" r="13" fill="var(--accent)" stroke="#fff" stroke-width="4"/>' +
+    '<rect x="370" y="207" width="180" height="28" rx="14" fill="var(--accent)"/><text x="460" y="226" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">Aquí sale del elevador</text>';
   h += aqui(enPA) + '</svg>';
   return h;
 }

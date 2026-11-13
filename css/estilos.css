@@ -102,7 +102,9 @@ footer.bottom{padding:.6rem max(16px,1.2rem);border-top:1px solid var(--line);di
 /* Flecha del destino: rebota para llamar la atención */
 @keyframes rebote{0%,100%{transform:translateY(-14px)}50%{transform:translateY(0)}}
 .flecha{animation:rebote .9s ease-in-out infinite}
-@keyframes pulse{0%,100%{r:13}50%{r:19}}
+@keyframes pulse{0%,100%{r:13}50%{r:17}}
+@keyframes onda{0%{r:16;opacity:.9}100%{r:42;opacity:0}}
+.here-ring{animation:onda 1.6s ease-out infinite}
 .here-dot{animation:pulse 1.6s ease-in-out infinite}
-@media (prefers-reduced-motion:reduce){.here-dot,.flecha{animation:none}.huella{animation:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.here-ring{display:none}.here-dot,.flecha{animation:none}.huella{animation:none;opacity:1}}
 @media (max-width:460px){.quick{grid-template-columns:1fr}.dest h2{font-size:1.6rem}}
