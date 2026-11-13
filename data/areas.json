@@ -207,7 +207,7 @@
       "nombre": "Urología",
       "piso": "pb",
       "cat": "cons",
-      "estado": "plano",
+      "estado": "ok",
       "sinonimos": "urologo prostata",
       "foto": "urologia-endoscopias",
       "referencia": "Planta baja · Puerta doble compartida Urología / Endoscopías"
@@ -217,7 +217,7 @@
       "nombre": "Endoscopías",
       "piso": "pb",
       "cat": "cons",
-      "estado": "plano",
+      "estado": "ok",
       "sinonimos": "endoscopia colonoscopia",
       "foto": "urologia-endoscopias",
       "referencia": "Planta baja · Puerta doble compartida Urología / Endoscopías"

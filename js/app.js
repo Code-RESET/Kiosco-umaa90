@@ -298,7 +298,7 @@ function mapaPB(dest){
     var sel = dest && dest.id === c[0], x = c[1], y = c[2];
     h += '<rect x="' + x + '" y="' + y + '" width="230" height="64" rx="8" fill="' + (sel ? COL[d.cat] : '#fff') + '" stroke="' + (sel ? 'var(--route)' : '#a9b7b0') + '" stroke-width="' + (sel ? 5 : 2) + '" stroke-dasharray="7 5"/>';
     if (sel) h += flecha(x + 240, y + 32, 90);
-    h += '<text x="' + (x + 115) + '" y="' + (y + 30) + '" font-size="17" font-weight="700" fill="' + (sel ? '#fff' : '#10231c') + '" text-anchor="middle">' + esc(corto(d)) + '</text><text x="' + (x + 115) + '" y="' + (y + 50) + '" font-size="12" fill="' + (sel ? '#fff' : '#53655d') + '" text-anchor="middle">posición por verificar</text>';
+    h += '<text x="' + (x + 115) + '" y="' + (y + 30) + '" font-size="17" font-weight="700" fill="' + (sel ? '#fff' : '#10231c') + '" text-anchor="middle">' + esc(corto(d)) + '</text><text x="' + (x + 115) + '" y="' + (y + 50) + '" font-size="12" fill="' + (sel ? '#fff' : '#53655d') + '" text-anchor="middle">' + (d.estado === 'ok' ? 'ubicación aproximada en el mapa' : 'posición por verificar') + '</text>';
   });
   h += '<rect x="600" y="300" width="230" height="244" rx="8" fill="var(--c-staff)"/><text x="715" y="425" font-size="16" font-weight="700" fill="#55625d" text-anchor="middle">Solo personal</text>';
   h += nucleo() + aqui(enPB) + '</svg>';
