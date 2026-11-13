@@ -126,7 +126,9 @@ function pasos(d){
   var s = [];
   if (d.piso === 'pb') {
     if (kiosco === 'pa') s.push({t:'Baje a <b>planta baja</b> en el elevador.', f:'vestibulo-pa'});
-    s.push({t:'Busque la <b>puerta doble</b> con los letreros «Consultorio de Urología» y «Consultorio de Endoscopias».', f:d.foto});
+    s.push({t:'Baje por el pasillo y gire a la <b>derecha</b> en el pasillo de planta baja.'});
+    if (d.id === 'urologia' || d.id === 'endoscopias') s.push({t:'Busque la <b>puerta doble</b> con los letreros «Consultorio de Urología» y «Consultorio de Endoscopias».', f:d.foto});
+    else s.push({t:'<b>' + esc(corto(d)) + '</b>: ' + esc(d.referencia || '') + '.', f:d.foto});
     return s;
   }
   if (kiosco === 'pb') {
@@ -163,7 +165,9 @@ function renderRuta(d){
     mapa += leyenda(d);
   } else mapa = mapaPB(d);
   var zoomBtn = '';
-  var ayuda = d.id === 'recepcion' ? '' : '<button class="ayuda" type="button" data-go="recepcion"><b>¿No lo encuentra?</b> Pregunte en Recepción · Puerta 9 · 1er piso</button>';
+  var ayudaId = d.piso === 'pb' ? 'admision' : 'recepcion';
+  var ayuda = d.id === ayudaId ? '' : '<button class="ayuda" type="button" data-go="' + ayudaId + '"><b>¿No lo encuentra?</b> ' +
+    (d.piso === 'pb' ? 'Pregunte en el Módulo de Admisión · Planta baja' : 'Pregunte en Recepción · Puerta 9 · 1er piso') + '</button>';
   var lista = d.estado === 'pendiente' ? '' : '<ol class="steps">' + pasos(d).map(function(p){
       return '<li><span>' + p.t + (p.f ? '<img class="foto" src="fotos/' + p.f + '.jpg" alt="Foto de referencia" loading="lazy">' : '') + '</span></li>';
     }).join('') + '</ol>';
@@ -287,20 +291,36 @@ function mapaPA(dest, zoom){
   return h;
 }
 
+/* Planta baja (borrador según croquis de Angel, 13-nov-2026):
+   elevador → pasillo hacia abajo → pasillo a la derecha con Admisión, Endoscopías, Urología y Sanitarios; escaleras al fondo */
+var PB_CUARTOS = [
+  {id:'admision',    x:395, w:110, t:'Admisión'},
+  {id:'endoscopias', x:525, w:110},
+  {id:'urologia',    x:635, w:110},
+  {id:'wc-pb',       x:765, w:95,  t:'Sanitarios'}
+];
 function mapaPB(dest){
-  var enPB = kiosco === 'pb';
-  var h = '<svg viewBox="20 60 860 620" role="img" aria-label="Mapa de planta baja">';
-  h += '<rect x="430" y="255" width="40" height="300" fill="var(--hall)"/>';
-  h += '<text x="420" y="410" font-size="15" fill="var(--hall-ink)" text-anchor="end">pasillo de entrada</text>';
-  h += '<rect x="360" y="555" width="180" height="70" rx="10" fill="var(--accent)"/><text x="450" y="586" font-size="20" font-weight="700" fill="#fff" text-anchor="middle">ENTRADA</text><text x="450" y="608" font-size="13" fill="#fff" text-anchor="middle">con rampa</text>';
-  [['urologia',70,300],['endoscopias',70,380],['wc-pb',70,460]].forEach(function(c){
-    var d = byId[c[0]]; if (!d) return;
-    var sel = dest && dest.id === c[0], x = c[1], y = c[2];
-    h += '<rect x="' + x + '" y="' + y + '" width="230" height="64" rx="8" fill="' + (sel ? COL[d.cat] : '#fff') + '" stroke="' + (sel ? 'var(--route)' : '#a9b7b0') + '" stroke-width="' + (sel ? 5 : 2) + '" stroke-dasharray="7 5"/>';
-    if (sel) h += flecha(x + 240, y + 32, 90);
-    h += '<text x="' + (x + 115) + '" y="' + (y + 30) + '" font-size="17" font-weight="700" fill="' + (sel ? '#fff' : '#10231c') + '" text-anchor="middle">' + esc(corto(d)) + '</text><text x="' + (x + 115) + '" y="' + (y + 50) + '" font-size="12" fill="' + (sel ? '#fff' : '#53655d') + '" text-anchor="middle">' + (d.estado === 'ok' ? 'ubicación aproximada en el mapa' : 'posición por verificar') + '</text>';
+  var enPB = kiosco === 'pb', PY = 470;
+  var h = '<svg viewBox="20 60 880 600" role="img" aria-label="Mapa de planta baja">';
+  h += '<rect x="430" y="255" width="40" height="235" fill="var(--hall)"/>';
+  h += '<rect x="380" y="450" width="500" height="40" fill="var(--hall)"/>';
+  h += '<text x="490" y="476" font-size="13" font-weight="700" fill="var(--hall-ink)">Pasillo de planta baja</text>';
+  h += '<rect x="230" y="450" width="150" height="40" fill="var(--hall)"/>';
+  h += '<rect x="100" y="440" width="130" height="60" rx="10" fill="var(--accent)"/><text x="165" y="467" font-size="17" font-weight="700" fill="#fff" text-anchor="middle">ENTRADA</text><text x="165" y="486" font-size="12" fill="#fff" text-anchor="middle">principal ¿?</text>';
+  PB_CUARTOS.forEach(function(c){
+    var d = byId[c.id]; if (!d) return;
+    var sel = dest && dest.id === c.id, op = dest && !sel ? 0.45 : 1;
+    h += '<rect x="' + c.x + '" y="492" width="' + (c.w - 6) + '" height="90" rx="6" fill="' + COL[d.cat] + '" opacity="' + op + '" stroke="' + (sel ? 'var(--route)' : '#fff') + '" stroke-width="' + (sel ? 6 : 3) + '"/>';
+    h += '<text x="' + (c.x + (c.w - 6) / 2) + '" y="542" font-size="15" font-weight="700" fill="#fff" text-anchor="middle" opacity="' + (op < 1 ? 0.85 : 1) + '">' + esc(c.t || corto(d)) + '</text>';
+    if (sel) h += flecha(c.x + (c.w - 6) / 2, 488, 0);
   });
-  h += '<rect x="600" y="300" width="230" height="244" rx="8" fill="var(--c-staff)"/><text x="715" y="425" font-size="16" font-weight="700" fill="#55625d" text-anchor="middle">Solo personal</text>';
+  h += escalera(840, 395) + '<text x="861" y="388" font-size="14" font-weight="700" fill="var(--c-serv)" text-anchor="middle">Escaleras</text>';
+  h += '<rect x="560" y="290" width="230" height="140" rx="8" fill="var(--c-staff)"/><text x="675" y="365" font-size="15" font-weight="700" fill="#55625d" text-anchor="middle">Solo personal</text>';
+  if (dest && dest.estado !== 'pendiente') {
+    var c = PB_CUARTOS.filter(function(x){ return x.id === dest.id; })[0];
+    if (c) { var cx = c.x + (c.w - 6) / 2; h += huellas((enPB ? KIOSCO.x + ',' + KIOSCO.y + ' 450,240' : '460,185 450,240') + ' 450,' + PY + ' ' + cx + ',' + PY); }
+  }
+  h += '<text x="40" y="650" font-size="12" fill="#53655d">Borrador: distribución según croquis, por verificar en sitio.</text>';
   h += nucleo() + aqui(enPB) + '</svg>';
   return h;
 }

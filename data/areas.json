@@ -203,6 +203,16 @@
       "referencia": "Al fondo, misma puerta doble que Trabajo Social"
     },
     {
+      "id": "admision",
+      "nombre": "Módulo de Admisión",
+      "corto": "Admisión",
+      "piso": "pb",
+      "cat": "apoyo",
+      "estado": "ok",
+      "sinonimos": "admision registro ingreso vigencia alta cita informes",
+      "referencia": "Primera área del pasillo de planta baja, a la derecha"
+    },
+    {
       "id": "urologia",
       "nombre": "Urología",
       "piso": "pb",
@@ -210,7 +220,7 @@
       "estado": "ok",
       "sinonimos": "urologo prostata",
       "foto": "urologia-endoscopias",
-      "referencia": "Planta baja · Puerta doble compartida Urología / Endoscopías"
+      "referencia": "Puerta doble compartida con Endoscopías"
     },
     {
       "id": "endoscopias",
@@ -220,7 +230,7 @@
       "estado": "ok",
       "sinonimos": "endoscopia colonoscopia",
       "foto": "urologia-endoscopias",
-      "referencia": "Planta baja · Puerta doble compartida Urología / Endoscopías"
+      "referencia": "Puerta doble compartida con Urología"
     },
     {
       "id": "wc-pb",
@@ -228,8 +238,9 @@
       "corto": "Sanitarios",
       "piso": "pb",
       "cat": "serv",
-      "estado": "plano",
-      "sinonimos": "baño baños wc sanitario"
+      "estado": "ok",
+      "sinonimos": "baño baños wc sanitario",
+      "referencia": "Al fondo del pasillo de planta baja, junto a las escaleras"
     }
   ],
   "planoPA": {
