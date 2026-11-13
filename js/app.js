@@ -137,7 +137,8 @@ function pasos(d){
   }
   s.push({t:'Pase frente a Farmacia y el letrero <b>«Bienvenidos»</b>, y entre al pasillo que sigue.', f:'bienvenidos'});
   s.push({t:'Siga recto por el pasillo de celosías y macetas.', f:'celosias'});
-  s.push({t:'Al fondo, en el letrero verde <b>«Consultorios»</b>, gire a la <b>izquierda</b> y cruce las puertas de vidrio.', f:'consultorios'});
+  s.push({t:'Al fondo, en el letrero verde <b>«Consultorios»</b>, gire a la <b>izquierda</b>.', f:'consultorios'});
+  s.push({t:'Cruce las <b>puertas de vidrio</b> con el logo IMSS: ahí empieza el pasillo de consultorios.', f:'puertas-imss'});
   if (d.indicacion) { s.push({t:d.indicacion, f:d.foto}); return s; }
   var prev = D.filter(function(x){ return x.orden && x.orden < d.orden; }).sort(function(a,b){ return b.orden - a.orden; })[0];
   if (d.orden <= 2) s.push({t:'<b>' + esc(corto(d)) + '</b> está al inicio del pasillo, al cruzar las puertas.', f:d.foto});
