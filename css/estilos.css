@@ -91,6 +91,12 @@ footer.bottom{padding:.6rem max(16px,1.2rem);border-top:1px solid var(--line);di
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:.8rem;font-size:.9rem;line-height:1.45;-webkit-user-select:text;user-select:text}
 .panel ul{margin:6px 0 0;padding-left:20px}
 
+/* Botón flotante de inicio: siempre visible, abajo a la derecha */
+.fab-inicio{position:fixed;right:max(16px,1.2rem);bottom:max(16px,1.2rem);z-index:40;display:flex;align-items:center;gap:.5rem;border:3px solid #fff;border-radius:999px;background:var(--accent);color:#fff;padding:.9rem 1.4rem;font-size:1.35rem;font-weight:700;box-shadow:0 6px 18px rgba(0,0,0,.28)}
+.fab-inicio svg{width:1.8rem;height:1.8rem}
+.fab-inicio:active{transform:scale(.96)}
+main{padding-bottom:6rem}
+
 /* Pantalla de reposo */
 .reposo{position:fixed;inset:0;background:var(--accent);z-index:50;overflow:hidden}
 .reposo-card{position:absolute;left:10%;top:15%;max-width:80%;color:#fff;transition:left 6s ease-in-out,top 6s ease-in-out}

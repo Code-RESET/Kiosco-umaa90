@@ -274,7 +274,7 @@
     }
   ],
   "planoPA": {
-    "_info": "Fila de consultorios del 1er piso, de la entrada del pasillo hacia el fondo. x y w en unidades del dibujo (viewBox 920 de ancho). id null = área solo para personal.",
+    "_info": "Fila de consultorios del 1er piso, de la entrada del pasillo hacia el fondo. x y w en unidades del dibujo (viewBox 920 de ancho).",
     "cuartos": [
       {
         "id": "wc-pa",
@@ -338,24 +338,19 @@
         "w": 48
       },
       {
-        "id": null,
-        "x": 669,
-        "w": 20
-      },
-      {
         "id": "hemo",
-        "x": 689,
-        "w": 74
+        "x": 669,
+        "w": 80
       },
       {
         "id": "tsocial",
-        "x": 763,
-        "w": 47
+        "x": 749,
+        "w": 54
       },
       {
         "id": "nutricion",
-        "x": 810,
-        "w": 47
+        "x": 803,
+        "w": 54
       }
     ]
   }
