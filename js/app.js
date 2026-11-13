@@ -1,5 +1,5 @@
 /*
-  Tu Guía Maps IMSS · kiosco de orientación UMAA 90 (Torreón)
+  IMSS Maps · kiosco de orientación UMAA 90 (Torreón)
   Autor y responsable del contenido: Ing. Luis Ángel Díaz Bernal
 
   Configuración por dirección (cada tótem abre la suya):

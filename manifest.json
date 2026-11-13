@@ -1,6 +1,6 @@
 {
-  "name": "Tu Guía Maps IMSS · UMAA 90",
-  "short_name": "Tu Guía IMSS",
+  "name": "IMSS Maps · UMAA 90",
+  "short_name": "IMSS Maps",
   "description": "Mapa y rutas para pacientes y visitantes de la UMAA 90.",
   "lang": "es-MX",
   "start_url": "./index.html",
