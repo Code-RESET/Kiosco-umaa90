@@ -314,8 +314,8 @@ function mapaPB(dest){
   h += '<rect x="420" y="490" width="505" height="40" fill="var(--hall)"/>';                       // andador de consultorios
   h += '<text x="560" y="485" font-size="13" font-weight="700" fill="var(--hall-ink)">Pasillo de consultorios</text>';
   // entrada lateral: al inicio del pasillo que sale del vestíbulo hacia el oriente (llega desde el norte)
-  h += '<rect x="250" y="340" width="40" height="58" fill="var(--hall)"/>';
-  h += '<rect x="240" y="392" width="60" height="6" fill="var(--accent)"/>';
+  // flecha de entrada (en lugar de un pasillo): indica que por aquí se entra al pasillo
+  h += '<path d="M262 344 h16 v26 h12 l-20 24 l-20 -24 h12 z" fill="var(--accent)" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>';
   h += '<rect x="215" y="286" width="110" height="54" rx="10" fill="var(--accent)"/><text x="270" y="310" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">ENTRADA</text><text x="270" y="328" font-size="11" fill="#fff" text-anchor="middle">lateral</text>';
   // rampa a Admisión
   h += '<text x="470" y="470" font-size="13" font-weight="700" fill="var(--c-cons)" text-anchor="end">♿ Rampa</text>';
