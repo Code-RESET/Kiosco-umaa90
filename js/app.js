@@ -91,7 +91,7 @@ function render(){
 
 function filaHTML(d){
   var t = d.estado === 'ok' ? '' : '<span class="tag">' + (d.estado === 'plano' ? 'por verificar' : 'sin ubicar') + '</span>';
-  return '<button class="row" type="button" data-go="' + d.id + '"><span class="dot" style="background:' + COL[d.cat] + '"></span><span>' + esc(d.nombre) + t + '</span><span class="where">' + pisoTxt(d.piso) + '</span></button>';
+  return '<button class="row" type="button" data-go="' + d.id + '"><span class="dot" style="background:' + COL[d.cat] + '"></span><span>' + esc(d.nombre) + t + (d.horario ? '<small class="hr">' + esc(d.horario.split(' (')[0].split(',')[0]) + '</small>' : '') + '</span><span class="where">' + pisoTxt(d.piso) + '</span></button>';
 }
 
 function renderInicio(){
@@ -127,7 +127,7 @@ function pasos(d){
   if (d.piso === 'pb') {
     if (kiosco === 'pa') s.push({t:'Baje a <b>planta baja</b> en el elevador.', f:'vestibulo-pa'});
     s.push({t:'Baje por el pasillo y gire a la <b>derecha</b> en el pasillo de planta baja.'});
-    if (d.id === 'urologia' || d.id === 'endoscopias') s.push({t:'Busque la <b>puerta doble</b> con los letreros «Consultorio de Urología» y «Consultorio de Endoscopias».', f:d.foto});
+    if (d.id === 'urologia' || d.id === 'endoscopias' || d.mismoLugar === 'endoscopias') s.push({t:'Busque la <b>puerta doble</b> con los letreros «Consultorio de Urología» y «Consultorio de Endoscopias».', f:d.foto});
     else s.push({t:'<b>' + esc(corto(d)) + '</b>: ' + esc(d.referencia || '') + '.', f:d.foto});
     return s;
   }
@@ -174,6 +174,7 @@ function renderRuta(d){
   $main.innerHTML =
     '<div class="dest"><span class="dot" style="background:' + COL[d.cat] + ';width:1.2rem;height:1.2rem"></span><h2>' + esc(d.nombre) + '</h2></div>' +
     '<p class="resumen">' + resumen(d) + '</p>' +
+    (d.horario ? '<p class="horario">🕒 ' + esc(d.horario) + '</p>' : '') +
     (cruza ? '<div class="dest"><span class="badge acc">♿ Ruta por elevador</span></div>' : '') +
     aviso + '<div class="mapbox">' + mapa + zoomBtn + '</div>' + lista + ayuda +
     '<div class="actions"><button class="big" type="button" data-home>Volver al inicio</button></div>' +
@@ -309,7 +310,7 @@ function mapaPB(dest){
   h += '<rect x="100" y="440" width="130" height="60" rx="10" fill="var(--accent)"/><text x="165" y="467" font-size="17" font-weight="700" fill="#fff" text-anchor="middle">ENTRADA</text><text x="165" y="486" font-size="12" fill="#fff" text-anchor="middle">principal ¿?</text>';
   PB_CUARTOS.forEach(function(c){
     var d = byId[c.id]; if (!d) return;
-    var sel = dest && dest.id === c.id, op = dest && !sel ? 0.45 : 1;
+    var sel = dest && (dest.id === c.id || dest.mismoLugar === c.id), op = dest && !sel ? 0.45 : 1;
     h += '<rect x="' + c.x + '" y="492" width="' + (c.w - 6) + '" height="90" rx="6" fill="' + COL[d.cat] + '" opacity="' + op + '" stroke="' + (sel ? 'var(--route)' : '#fff') + '" stroke-width="' + (sel ? 6 : 3) + '"/>';
     h += '<text x="' + (c.x + (c.w - 6) / 2) + '" y="542" font-size="15" font-weight="700" fill="#fff" text-anchor="middle" opacity="' + (op < 1 ? 0.85 : 1) + '">' + esc(c.t || corto(d)) + '</text>';
     if (sel) h += flecha(c.x + (c.w - 6) / 2, 488, 0);
@@ -317,7 +318,7 @@ function mapaPB(dest){
   h += escalera(840, 395) + '<text x="861" y="388" font-size="14" font-weight="700" fill="var(--c-serv)" text-anchor="middle">Escaleras</text>';
   h += '<rect x="560" y="290" width="230" height="140" rx="8" fill="var(--c-staff)"/><text x="675" y="365" font-size="15" font-weight="700" fill="#55625d" text-anchor="middle">Solo personal</text>';
   if (dest && dest.estado !== 'pendiente') {
-    var c = PB_CUARTOS.filter(function(x){ return x.id === dest.id; })[0];
+    var c = PB_CUARTOS.filter(function(x){ return x.id === dest.id || x.id === dest.mismoLugar; })[0];
     if (c) { var cx = c.x + (c.w - 6) / 2; h += huellas((enPB ? KIOSCO.x + ',' + KIOSCO.y + ' 450,240' : '460,185 450,240') + ' 450,' + PY + ' ' + cx + ',' + PY); }
   }
   h += '<text x="40" y="650" font-size="12" fill="#53655d">Borrador: distribución según croquis, por verificar en sitio.</text>';

@@ -204,13 +204,13 @@
     },
     {
       "id": "admision",
-      "nombre": "Módulo de Admisión",
-      "corto": "Admisión",
+      "nombre": "Módulo de Admisión e Informes",
+      "corto": "Admisión e Informes",
       "piso": "pb",
       "cat": "apoyo",
       "estado": "ok",
-      "sinonimos": "admision registro ingreso vigencia alta cita informes",
-      "referencia": "Primera área del pasillo de planta baja, a la derecha"
+      "sinonimos": "admision informes informacion registro ingreso vigencia alta cita citas preguntar dudas",
+      "referencia": "Primera área del pasillo de planta baja, a la derecha · Aquí le dan informes"
     },
     {
       "id": "urologia",
@@ -230,7 +230,20 @@
       "estado": "ok",
       "sinonimos": "endoscopia colonoscopia",
       "foto": "urologia-endoscopias",
-      "referencia": "Puerta doble compartida con Urología"
+      "referencia": "Puerta doble compartida con Urología",
+      "horario": "Por la tarde (por la mañana el consultorio es de Anestesiología)"
+    },
+    {
+      "id": "anestesiologia",
+      "nombre": "Anestesiología",
+      "piso": "pb",
+      "cat": "cons",
+      "estado": "ok",
+      "sinonimos": "anestesia anestesiologo valoracion preoperatoria cirugia",
+      "mismoLugar": "endoscopias",
+      "foto": "urologia-endoscopias",
+      "horario": "Por la mañana, en el consultorio de Endoscopías",
+      "referencia": "Consultorio de Endoscopías (por la mañana)"
     },
     {
       "id": "wc-pb",
