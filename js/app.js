@@ -129,6 +129,7 @@ function pasos(d){
     s.push({t:'Baje por el pasillo y gire a la <b>derecha</b> en el pasillo de planta baja.'});
     if (d.id === 'urologia' || d.id === 'endoscopias' || d.mismoLugar === 'endoscopias') s.push({t:'Busque la <b>puerta doble</b> con los letreros «Consultorio de Urología» y «Consultorio de Endoscopias».', f:d.foto});
     else s.push({t:'<b>' + esc(corto(d)) + '</b>: ' + esc(d.referencia || '') + '.', f:d.foto});
+    if (d.extra) s.push(d.extra);
     return s;
   }
   if (kiosco === 'pb') {

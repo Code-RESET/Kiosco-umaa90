@@ -211,7 +211,12 @@
       "estado": "ok",
       "sinonimos": "admision informes informacion registro ingreso vigencia alta cita citas preguntar dudas",
       "referencia": "Primera área del pasillo de planta baja, a la derecha · Aquí le dan informes",
-      "foto": "admision"
+      "foto": "admision",
+      "horario": "Lunes a viernes, 08:00 a 20:00",
+      "extra": {
+        "t": "También tiene <b>entrada directa desde afuera</b>, por la rampa azul con barandal.",
+        "f": "entrada-admision"
+      }
     },
     {
       "id": "urologia",
