@@ -303,13 +303,13 @@ var PB_CUARTOS = [
 ];
 function mapaPB(dest){
   var enPB = kiosco === 'pb', PY = 470;
-  var h = '<svg viewBox="20 60 880 600" role="img" aria-label="Mapa de planta baja">';
+  var h = '<svg viewBox="20 60 1010 600" role="img" aria-label="Mapa de planta baja">';
   h += '<rect x="430" y="255" width="40" height="235" fill="var(--hall)"/>';
-  h += '<rect x="380" y="450" width="500" height="40" fill="var(--hall)"/>';
+  h += '<rect x="380" y="450" width="520" height="40" fill="var(--hall)"/>';
   h += '<text x="490" y="476" font-size="13" font-weight="700" fill="var(--hall-ink)">Pasillo de planta baja</text>';
-  // Entrada principal: llega por un costado al pasillo que baja del elevador
+  // Entrada lateral: llega por un costado al pasillo que baja del elevador
   h += '<rect x="270" y="340" width="165" height="40" fill="var(--hall)"/>';
-  h += '<rect x="130" y="330" width="140" height="60" rx="10" fill="var(--accent)"/><text x="200" y="357" font-size="17" font-weight="700" fill="#fff" text-anchor="middle">ENTRADA</text><text x="200" y="376" font-size="12" fill="#fff" text-anchor="middle">principal</text>';
+  h += '<rect x="130" y="330" width="140" height="60" rx="10" fill="var(--accent)"/><text x="200" y="357" font-size="17" font-weight="700" fill="#fff" text-anchor="middle">ENTRADA</text><text x="200" y="376" font-size="12" fill="#fff" text-anchor="middle">lateral</text>';
   PB_CUARTOS.forEach(function(c){
     var d = byId[c.id]; if (!d) return;
     var sel = dest && (dest.id === c.id || dest.mismoLugar === c.id), op = dest && !sel ? 0.45 : 1;
@@ -317,7 +317,15 @@ function mapaPB(dest){
     h += '<text x="' + (c.x + (c.w - 6) / 2) + '" y="542" font-size="15" font-weight="700" fill="#fff" text-anchor="middle" opacity="' + (op < 1 ? 0.85 : 1) + '">' + esc(c.t || corto(d)) + '</text>';
     if (sel) h += flecha(c.x + (c.w - 6) / 2, 488, 0);
   });
-  h += escalera(840, 395) + '<text x="861" y="388" font-size="14" font-weight="700" fill="var(--c-serv)" text-anchor="middle">Escaleras</text>';
+  h += escalera(810, 375) + '<text x="831" y="368" font-size="14" font-weight="700" fill="var(--c-serv)" text-anchor="middle">Escaleras</text>';
+  // Entrada principal desde la calle (oriente), con Mando de Vigilancia
+  h += '<rect x="900" y="410" width="125" height="120" rx="10" fill="var(--accent)"/>' +
+    '<text x="962" y="448" font-size="16" font-weight="700" fill="#fff" text-anchor="middle">ENTRADA</text>' +
+    '<text x="962" y="468" font-size="16" font-weight="700" fill="#fff" text-anchor="middle">PRINCIPAL</text>' +
+    '<text x="962" y="492" font-size="11" fill="#fff" text-anchor="middle">desde la calle</text>' +
+    '<text x="962" y="510" font-size="11" fill="#fff" text-anchor="middle">Mando de Vigilancia</text>';
+  h += '<text x="447" y="606" font-size="13" font-weight="700" fill="var(--c-cons)" text-anchor="middle">♿ Rampa</text>';
+  h += '<text x="1022" y="400" font-size="12" fill="#53655d" text-anchor="end">↑ N</text>';
   h += '<rect x="560" y="320" width="230" height="110" rx="8" fill="#8d7768"/><text x="675" y="381" font-size="17" font-weight="700" fill="#fff" text-anchor="middle">Sala de espera</text>';
   if (dest && dest.estado !== 'pendiente') {
     var c = PB_CUARTOS.filter(function(x){ return x.id === dest.id || x.id === dest.mismoLugar; })[0];
