@@ -151,9 +151,9 @@ function renderRuta(d){
 
 function leyenda(sel){
   var items = D.filter(function(x){ return x.piso === 'pa' && x.orden; }).sort(function(a,b){ return a.orden - b.orden; });
-  return '<div class="legend">' + items.map(function(x){
+  return '<details class="legend-wrap"><summary>Ver números de todos los consultorios</summary><div class="legend">' + items.map(function(x){
     return '<span class="lg' + (sel && sel.id === x.id ? ' on' : '') + '"><b style="background:' + COL[x.cat] + '">' + x.orden + '</b>' + esc(corto(x).replace('Consultorio de ','')) + '</span>';
-  }).join('') + '</div>';
+  }).join('') + '</div></details>';
 }
 
 /* ---------- Mapas SVG (coordenadas del dibujo, no píxeles) ---------- */
@@ -333,8 +333,8 @@ if ('serviceWorker' in navigator && location.protocol !== 'file:') {
 
 /* ---------- Arranque ---------- */
 Promise.all([
-  fetch('data/areas.json').then(function(r){ if (!r.ok) throw new Error('areas.json ' + r.status); return r.json(); }),
-  fetch('version.json').then(function(r){ return r.json(); }).catch(function(){ return {version:'?'}; })
+  fetch('data/areas.json', {cache:'no-cache'}).then(function(r){ if (!r.ok) throw new Error('areas.json ' + r.status); return r.json(); }),
+  fetch('version.json', {cache:'no-cache'}).then(function(r){ return r.json(); }).catch(function(){ return {version:'?'}; })
 ]).then(function(res){
   var data = res[0];
   VERSION = res[1].version || '?';

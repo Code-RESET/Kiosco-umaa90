@@ -3,7 +3,7 @@
   Autor: Ing. Luis Ángel Díaz Bernal
   IMPORTANTE: en cada entrega cambie VERSION aquí y en version.json (el mismo número).
 */
-var VERSION = '1.1.2';
+var VERSION = '1.1.3';
 var CACHE = 'kiosco-umaa90-' + VERSION;
 var ARCHIVOS = [
   './', 'index.html', 'css/estilos.css', 'js/app.js', 'data/areas.json', 'version.json', 'manifest.json', 'icons/icono.svg',
@@ -28,7 +28,8 @@ self.addEventListener('activate', function(e){
 self.addEventListener('fetch', function(e){
   if (e.request.method !== 'GET') return;
   e.respondWith(
-    fetch(e.request).then(function(resp){
+    // no-cache: pregunta al servidor si hay cambios (evita que el navegador muestre archivos viejos)
+    fetch(e.request, {cache:'no-cache'}).then(function(resp){
       if (resp && resp.ok && new URL(e.request.url).origin === location.origin && e.request.url.indexOf('version.json') < 0) {
         var copia = resp.clone();
         caches.open(CACHE).then(function(c){ c.put(e.request, copia); });
