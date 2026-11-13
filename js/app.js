@@ -150,10 +150,9 @@ function renderRuta(d){
 }
 
 function leyenda(sel){
-  var items = D.filter(function(x){ return x.piso === 'pa' && x.orden; }).sort(function(a,b){ return a.orden - b.orden; });
-  return '<details class="legend-wrap"><summary>Ver números de todos los consultorios</summary><div class="legend">' + items.map(function(x){
-    return '<span class="lg' + (sel && sel.id === x.id ? ' on' : '') + '"><b style="background:' + COL[x.cat] + '">' + x.orden + '</b>' + esc(corto(x).replace('Consultorio de ','')) + '</span>';
-  }).join('') + '</div></details>';
+  // Solo se muestra el destino elegido; la lista completa ya no se despliega
+  if (!sel || !sel.orden) return '';
+  return '<div class="legend-sel"><b style="background:' + COL[sel.cat] + '">' + sel.orden + '</b><span>' + esc(corto(sel)) + '</span></div>';
 }
 
 /* ---------- Mapas SVG (coordenadas del dibujo, no píxeles) ---------- */
