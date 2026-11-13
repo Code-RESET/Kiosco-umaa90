@@ -1,0 +1,44 @@
+<!doctype html>
+<!--
+  Kiosco de orientación · UMAA 90 (IMSS, Torreón)
+  Autor y responsable del contenido: Ing. Luis Ángel Díaz Bernal
+  Versión: ver version.json
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0b6b4f">
+<meta name="robots" content="noindex, nofollow">
+<title>Orientación UMAA 90</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icono.svg" type="image/svg+xml">
+<link rel="preload" href="fonts/atkinson-hyperlegible-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/atkinson-hyperlegible-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+<div class="screen" id="screen">
+  <header class="top">
+    <div><h1>¿A dónde va?</h1><small>Orientación · UMAA 90</small></div>
+    <div class="floor-pill" id="floorPill" aria-live="polite">Usted está en: Planta baja</div>
+  </header>
+  <main id="main"><p class="empty">Cargando…</p></main>
+  <footer class="bottom">
+    <span id="demoBar" hidden></span>
+    <span class="ver" id="ver"></span>
+  </footer>
+</div>
+
+<!-- Pantalla de reposo: aparece tras unos minutos sin uso y se mueve para no marcar la pantalla -->
+<div class="reposo" id="reposo" hidden>
+  <div class="reposo-card" id="reposoCard">
+    <p class="reposo-titulo">¿A dónde va?</p>
+    <p class="reposo-sub">Toque la pantalla para encontrar su destino</p>
+    <p class="reposo-dest" id="reposoDest"></p>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
