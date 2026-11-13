@@ -3,7 +3,7 @@
   Autor: Ing. Luis Ángel Díaz Bernal
   IMPORTANTE: en cada entrega cambie VERSION aquí y en version.json (el mismo número).
 */
-var VERSION = '1.1.5';
+var VERSION = '1.2.0';
 var CACHE = 'kiosco-umaa90-' + VERSION;
 var ARCHIVOS = [
   './', 'index.html', 'css/estilos.css', 'js/app.js', 'data/areas.json', 'version.json', 'manifest.json', 'icons/icono.svg',

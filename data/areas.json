@@ -16,7 +16,8 @@
       "cat": "farm",
       "estado": "ok",
       "sinonimos": "medicinas medicamentos recetas surtir",
-      "foto": "farmacia"
+      "foto": "farmacia",
+      "referencia": "Junto al elevador y al kiosco"
     },
     {
       "id": "archivo",
@@ -25,7 +26,8 @@
       "cat": "admin",
       "estado": "ok",
       "sinonimos": "expediente expedientes",
-      "foto": "archivo"
+      "foto": "archivo",
+      "referencia": "Dentro de Farmacia, al fondo a la izquierda"
     },
     {
       "id": "wc-pa",
@@ -36,7 +38,8 @@
       "estado": "ok",
       "sinonimos": "baño baños wc sanitario hombre caballeros",
       "orden": 1,
-      "foto": "sanitarios"
+      "foto": "sanitarios",
+      "referencia": "Al inicio del pasillo de consultorios"
     },
     {
       "id": "wc-pa-m",
@@ -47,7 +50,8 @@
       "estado": "ok",
       "sinonimos": "baño baños wc sanitario mujer damas",
       "orden": 2,
-      "foto": "sanitarios"
+      "foto": "sanitarios",
+      "referencia": "Al inicio del pasillo de consultorios"
     },
     {
       "id": "modulo",
@@ -56,7 +60,8 @@
       "cat": "admin",
       "estado": "ok",
       "sinonimos": "direccion director secretaria coordinacion",
-      "orden": 3
+      "orden": 3,
+      "referencia": "Después de los sanitarios"
     },
     {
       "id": "oftalmologia",
@@ -106,7 +111,8 @@
       "estado": "ok",
       "sinonimos": "nebulizacion inhalo respiratoria",
       "orden": 8,
-      "indicacion": "En el pasillo de consultorios, frente a la <b>sala de espera central</b>, está la ventanilla de <b>Inhaloterapia</b>, junto a Recepción."
+      "indicacion": "En el pasillo de consultorios, frente a la <b>sala de espera central</b>, está la ventanilla de <b>Inhaloterapia</b>, junto a Recepción.",
+      "referencia": "Frente a la sala de espera central"
     },
     {
       "id": "recepcion",
@@ -117,7 +123,8 @@
       "estado": "ok",
       "sinonimos": "recepcion informes registro cita citas asistente asistentes medica ventanilla",
       "orden": 9,
-      "indicacion": "En el pasillo de consultorios, frente a la <b>sala de espera central</b>, está el módulo de <b>Recepción</b> con las asistentes médicas, junto a Inhaloterapia."
+      "indicacion": "En el pasillo de consultorios, frente a la <b>sala de espera central</b>, está el módulo de <b>Recepción</b> con las asistentes médicas, junto a Inhaloterapia.",
+      "referencia": "Frente a la sala de espera central"
     },
     {
       "id": "neumologia",
@@ -126,7 +133,8 @@
       "cat": "cons",
       "estado": "ok",
       "sinonimos": "pulmon pulmones respiracion asma neumologo",
-      "orden": 10
+      "orden": 10,
+      "referencia": "Después de Recepción"
     },
     {
       "id": "quimio",
@@ -165,7 +173,8 @@
       "estado": "ok",
       "sinonimos": "dialisis hemodialisis riñon",
       "orden": 14,
-      "foto": "hemo"
+      "foto": "hemo",
+      "referencia": "Hacia el fondo del pasillo"
     },
     {
       "id": "tsocial",
@@ -175,7 +184,8 @@
       "estado": "ok",
       "sinonimos": "trabajadora social tramites",
       "orden": 15,
-      "foto": "tsocial"
+      "foto": "tsocial",
+      "referencia": "Al fondo, después de Hemodiálisis"
     },
     {
       "id": "nutricion",
@@ -185,7 +195,8 @@
       "estado": "ok",
       "sinonimos": "dieta nutriologo nutriologa",
       "orden": 16,
-      "foto": "nutricion"
+      "foto": "nutricion",
+      "referencia": "Al final del pasillo, junto a las escaleras"
     },
     {
       "id": "urologia",

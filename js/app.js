@@ -73,6 +73,13 @@ function validar(){
 
 /* ---------- Estado de la pantalla ---------- */
 var vista = {t:'inicio', q:''};
+var mapaCompleto = false;
+var CATEGORIAS = [
+  {id:'consultas',  nombre:'Consultas',          cats:['cons'],                 color:'var(--c-cons)'},
+  {id:'trat',       nombre:'Tratamientos',       cats:['trat'],                 color:'var(--c-trat)'},
+  {id:'tramites',   nombre:'Trámites y apoyo',   cats:['apoyo','admin','farm'], color:'var(--c-apoyo)'},
+  {id:'sanitarios', nombre:'Sanitarios',         cats:['serv'],                 color:'var(--c-serv)'}
+];
 var verPanel = false;
 
 function render(){
@@ -88,18 +95,24 @@ function filaHTML(d){
 }
 
 function renderInicio(){
-  var q = vista.q.trim(), lista;
-  if (q) { var nq = norm(q); lista = D.filter(function(d){ return norm(d.nombre + ' ' + (d.sinonimos || '')).indexOf(nq) >= 0; }); }
-  else lista = D.slice().sort(function(a,b){ return a.nombre.localeCompare(b.nombre, 'es'); });
-  var quick = q ? '' : '<p class="label">Lo más buscado</p><div class="quick">' + QUICK.map(function(id){
+  var q = vista.q.trim(), lista, titulo;
+  var cat = vista.cat && CATEGORIAS.filter(function(c){ return c.id === vista.cat; })[0];
+  if (q) { var nq = norm(q); lista = D.filter(function(d){ return norm(d.nombre + ' ' + (d.sinonimos || '')).indexOf(nq) >= 0; }); titulo = 'Resultados'; }
+  else if (cat) { lista = D.filter(function(d){ return cat.cats.indexOf(d.cat) >= 0; }); titulo = cat.nombre; }
+  else { lista = D.slice(); titulo = 'Todos los servicios'; }
+  lista.sort(function(a,b){ return a.nombre.localeCompare(b.nombre, 'es'); });
+  var cats = q ? '' : '<p class="label">Buscar por tipo</p><div class="cats">' + CATEGORIAS.map(function(c){
+      return '<button class="cbtn' + (cat && cat.id === c.id ? ' on' : '') + '" type="button" data-cat="' + c.id + '" style="--cc:' + c.color + '">' + c.nombre + '</button>';
+    }).join('') + '</div>';
+  var quick = (q || cat) ? '' : '<p class="label">Lo más buscado</p><div class="quick">' + QUICK.map(function(id){
       var d = byId[id]; if (!d) return '';
       return '<button class="qbtn" type="button" data-go="' + id + '" style="background:' + COL[d.cat] + '">' + esc(corto(d)) + '<span>' + pisoTxt(d.piso) + '</span></button>';
     }).join('') + '</div>';
   $main.innerHTML =
     '<label class="search" for="q"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="7" fill="none" stroke="var(--muted)" stroke-width="2.4"/><path d="M16 16l5 5" stroke="var(--muted)" stroke-width="2.4" stroke-linecap="round"/></svg>' +
     '<input id="q" type="search" autocomplete="off" placeholder="Escriba un servicio: farmacia, riñón, ojos…" value="' + esc(vista.q) + '"></label>' +
-    quick +
-    '<p class="label">' + (q ? 'Resultados' : 'Todos los servicios') + '</p>' +
+    cats + quick +
+    '<p class="label">' + titulo + (cat ? ' · <button class="link" type="button" data-cat="">ver todos</button>' : '') + '</p>' +
     '<div class="list">' + (lista.length ? lista.map(filaHTML).join('') : '<p class="empty">No encontramos "' + esc(q) + '". Pruebe con otra palabra o pregunte en la ventanilla.</p>') + '</div>' +
     (verPanel ? panelEstado() : '');
   var inp = document.getElementById('q');
@@ -138,17 +151,26 @@ function renderRuta(d){
   if (d.estado === 'pendiente') aviso = '<div class="warnbox"><b>Ubicación por confirmar.</b> Aún no tenemos la ruta exacta a ' + esc(d.nombre) + '. Está en el ' + pisoTxt(d.piso) + '; pregunte en la ventanilla más cercana.</div>';
   else if (d.estado === 'plano') aviso = '<div class="warnbox"><b>Ruta por verificar.</b> Si no encuentra el lugar, pregunte en Recepción.</div>';
   var mapa = d.piso === 'pa' ? mapaPA(d) + leyenda(d) : mapaPB(d);
+  var zoomBtn = (d.piso === 'pa' && d.estado !== 'pendiente') ? '<button class="mapbtn" type="button" data-zoom>' + (mapaCompleto ? '🔍 Acercar al destino' : '🗺️ Ver mapa completo') + '</button>' : '';
+  var ayuda = d.id === 'recepcion' ? '' : '<button class="ayuda" type="button" data-go="recepcion"><b>¿No lo encuentra?</b> Pregunte en Recepción · Puerta 9 · 1er piso</button>';
   var lista = d.estado === 'pendiente' ? '' : '<ol class="steps">' + pasos(d).map(function(p){
       return '<li><span>' + p.t + (p.f ? '<img class="foto" src="fotos/' + p.f + '.jpg" alt="Foto de referencia" loading="lazy">' : '') + '</span></li>';
     }).join('') + '</ol>';
   $main.innerHTML =
     '<div class="dest"><span class="dot" style="background:' + COL[d.cat] + ';width:1.2rem;height:1.2rem"></span><h2>' + esc(d.nombre) + '</h2></div>' +
-    '<div class="dest"><span class="badge">' + pisoTxt(d.piso) + '</span>' + (cruza ? '<span class="badge acc">♿ Ruta por elevador</span>' : '') + '</div>' +
-    aviso + '<div class="mapbox">' + mapa + '</div>' + lista +
+    '<p class="resumen">' + resumen(d) + '</p>' +
+    (cruza ? '<div class="dest"><span class="badge acc">♿ Ruta por elevador</span></div>' : '') +
+    aviso + '<div class="mapbox">' + mapa + zoomBtn + '</div>' + lista + ayuda +
     '<div class="actions"><button class="big" type="button" data-home>Volver al inicio</button></div>' +
     (verPanel ? panelEstado() : '');
 }
 
+function resumen(d){
+  var partes = [pisoTxt(d.piso)];
+  if (d.orden) partes.push('Puerta ' + d.orden);
+  partes.push(d.referencia || (d.orden ? 'Pasillo de consultorios' : (d.piso === 'pb' ? 'Ubicación por verificar' : 'Junto al elevador')));
+  return partes.map(esc).join(' · ');
+}
 function leyenda(sel){
   // Solo se muestra el destino elegido; la lista completa ya no se despliega
   if (!sel || !sel.orden) return '';
@@ -204,7 +226,15 @@ function escalera(x, y){
 
 function mapaPA(dest){
   var enPA = kiosco === 'pa';
-  var h = '<svg viewBox="0 60 920 650" role="img" aria-label="Mapa del 1er piso">';
+  var vb = '0 60 920 650';
+  if (dest && !mapaCompleto) {
+    if (dest.id === 'farmacia' || dest.id === 'archivo') vb = '200 70 420 290';
+    else {
+      var rz = ROOMS.filter(function(x){ return x.id === dest.id; })[0];
+      if (rz) { var x0 = Math.max(0, Math.min(920 - 440, rz.x + rz.w / 2 - 220)); vb = x0 + ' 245 440 380'; }
+    }
+  }
+  var h = '<svg viewBox="' + vb + '" role="img" aria-label="Mapa del 1er piso">';
   h += '<polyline points="360,200 40,250 40,' + PASILLO_Y + ' 70,' + PASILLO_Y + '" fill="none" stroke="var(--hall)" stroke-width="40" stroke-linejoin="round"/>';
   h += '<rect x="62" y="328" width="804" height="312" rx="8" fill="#f3f6f4" stroke="#a9b7b0" stroke-width="2"/>';
   h += '<rect x="62" y="335" width="804" height="56" fill="var(--hall)"/>';
@@ -279,7 +309,10 @@ function pintarDemo(){
 /* ---------- Eventos ---------- */
 document.body.addEventListener('click', function(e){
   var go = e.target.closest('[data-go]');
-  if (go) { vista = {t:'ruta', id:go.getAttribute('data-go')}; render(); window.scrollTo(0, 0); return; }
+  if (go) { vista = {t:'ruta', id:go.getAttribute('data-go')}; mapaCompleto = false; render(); window.scrollTo(0, 0); return; }
+  var cb = e.target.closest('[data-cat]');
+  if (cb) { var c = cb.getAttribute('data-cat'); vista = {t:'inicio', q:'', cat:(vista.cat === c ? '' : c)}; render(); return; }
+  if (e.target.closest('[data-zoom]')) { mapaCompleto = !mapaCompleto; render(); return; }
   if (e.target.closest('[data-home]')) { vista = {t:'inicio', q:''}; render(); window.scrollTo(0, 0); return; }
   var p = e.target.closest('[data-piso]');
   if (p) { kiosco = p.getAttribute('data-piso'); render(); return; }
