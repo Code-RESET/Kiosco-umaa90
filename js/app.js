@@ -306,8 +306,9 @@ function mapaPB(dest){
   h += '<rect x="430" y="255" width="40" height="235" fill="var(--hall)"/>';
   h += '<rect x="380" y="450" width="500" height="40" fill="var(--hall)"/>';
   h += '<text x="490" y="476" font-size="13" font-weight="700" fill="var(--hall-ink)">Pasillo de planta baja</text>';
-  h += '<rect x="230" y="450" width="150" height="40" fill="var(--hall)"/>';
-  h += '<rect x="100" y="440" width="130" height="60" rx="10" fill="var(--accent)"/><text x="165" y="467" font-size="17" font-weight="700" fill="#fff" text-anchor="middle">ENTRADA</text><text x="165" y="486" font-size="12" fill="#fff" text-anchor="middle">principal ¿?</text>';
+  // Entrada principal: llega por un costado al pasillo que baja del elevador
+  h += '<rect x="270" y="340" width="165" height="40" fill="var(--hall)"/>';
+  h += '<rect x="130" y="330" width="140" height="60" rx="10" fill="var(--accent)"/><text x="200" y="357" font-size="17" font-weight="700" fill="#fff" text-anchor="middle">ENTRADA</text><text x="200" y="376" font-size="12" fill="#fff" text-anchor="middle">principal</text>';
   PB_CUARTOS.forEach(function(c){
     var d = byId[c.id]; if (!d) return;
     var sel = dest && (dest.id === c.id || dest.mismoLugar === c.id), op = dest && !sel ? 0.45 : 1;
@@ -316,7 +317,7 @@ function mapaPB(dest){
     if (sel) h += flecha(c.x + (c.w - 6) / 2, 488, 0);
   });
   h += escalera(840, 395) + '<text x="861" y="388" font-size="14" font-weight="700" fill="var(--c-serv)" text-anchor="middle">Escaleras</text>';
-  h += '<rect x="560" y="290" width="230" height="140" rx="8" fill="var(--c-staff)"/><text x="675" y="365" font-size="15" font-weight="700" fill="#55625d" text-anchor="middle">Solo personal</text>';
+  h += '<rect x="560" y="320" width="230" height="110" rx="8" fill="#8d7768"/><text x="675" y="381" font-size="17" font-weight="700" fill="#fff" text-anchor="middle">Sala de espera</text>';
   if (dest && dest.estado !== 'pendiente') {
     var c = PB_CUARTOS.filter(function(x){ return x.id === dest.id || x.id === dest.mismoLugar; })[0];
     if (c) { var cx = c.x + (c.w - 6) / 2; h += huellas((enPB ? KIOSCO.x + ',' + KIOSCO.y + ' 450,240' : '460,185 450,240') + ' 450,' + PY + ' ' + cx + ',' + PY); }
