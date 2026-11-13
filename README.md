@@ -1,4 +1,4 @@
-# Kiosco de orientación · UMAA 90
+# Tu Guía Maps IMSS · UMAA 90
 
 Página web de orientación para pacientes y visitantes de la UMAA 90 (IMSS, Torreón). Muestra un buscador de servicios, el mapa de cada piso y los pasos con fotos para llegar a cada área.
 

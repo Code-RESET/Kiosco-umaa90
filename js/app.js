@@ -1,5 +1,5 @@
 /*
-  Kiosco de orientación · UMAA 90 (IMSS, Torreón)
+  Tu Guía Maps IMSS · kiosco de orientación UMAA 90 (Torreón)
   Autor y responsable del contenido: Ing. Luis Ángel Díaz Bernal
 
   Configuración por dirección (cada tótem abre la suya):
@@ -163,6 +163,32 @@ function nucleo(){
     '<text x="460" y="222" font-size="15" font-weight="700" fill="#10231c" text-anchor="middle">Elevador</text>' +
     '<rect x="402" y="128" width="20" height="42" rx="3" fill="#10231c"/>';
 }
+/* Huellas que "caminan" a lo largo de la ruta */
+function huellas(pts){
+  var P = pts.trim().split(/\s+/).map(function(q){ var a = q.split(','); return [+a[0], +a[1]]; });
+  var paso = 32, lista = [];
+  for (var i = 0; i < P.length - 1; i++) {
+    var x1 = P[i][0], y1 = P[i][1], x2 = P[i+1][0], y2 = P[i+1][1];
+    var dx = x2 - x1, dy = y2 - y1, L = Math.sqrt(dx*dx + dy*dy); if (!L) continue;
+    var ang = Math.atan2(dy, dx) * 180 / Math.PI + 90;   // la huella apunta hacia donde se camina
+    var nx = -dy / L, ny = dx / L;                        // perpendicular: pie izquierdo / derecho
+    for (var t = (i ? paso / 2 : 14); t < L; t += paso) {
+      var lado = lista.length % 2 ? 1 : -1;
+      lista.push({x: x1 + dx * t / L + nx * 9 * lado, y: y1 + dy * t / L + ny * 9 * lado, a: ang});
+    }
+  }
+  var n = lista.length, ciclo = Math.max(2.4, n * 0.11 + 1.2);
+  return lista.map(function(f, k){
+    return '<g transform="translate(' + f.x.toFixed(1) + ',' + f.y.toFixed(1) + ') rotate(' + f.a.toFixed(0) + ')">' +
+      '<g class="huella" style="animation-duration:' + ciclo.toFixed(2) + 's;animation-delay:' + (k * 0.11).toFixed(2) + 's">' +
+      '<ellipse cx="0" cy="3" rx="5.5" ry="8.5" fill="var(--route)"/><ellipse cx="0" cy="-9" rx="4.5" ry="4" fill="var(--route)"/></g></g>';
+  }).join('');
+}
+/* Flecha grande que apunta al destino (dir: grados; 0 = hacia abajo) */
+function flecha(x, y, dir){
+  return '<g transform="translate(' + x + ',' + y + ') rotate(' + (dir || 0) + ')"><g class="flecha">' +
+    '<path d="M0 0 L-26 -30 L-11 -30 L-11 -66 L11 -66 L11 -30 L26 -30 Z" fill="var(--here)" stroke="#fff" stroke-width="4" stroke-linejoin="round"/></g></g>';
+}
 function aqui(on){
   return on ? '<circle class="here-dot" cx="' + KIOSCO.x + '" cy="' + KIOSCO.y + '" r="13" fill="var(--here)" stroke="#fff" stroke-width="4"/>' +
     '<text x="' + (KIOSCO.x - 18) + '" y="' + (KIOSCO.y + 38) + '" font-size="16" font-weight="700" fill="var(--here)" text-anchor="middle">Usted está aquí</text>' : '';
@@ -179,7 +205,7 @@ function mapaPA(dest){
   h += '<polyline points="360,200 40,250 40,' + PASILLO_Y + ' 70,' + PASILLO_Y + '" fill="none" stroke="var(--hall)" stroke-width="40" stroke-linejoin="round"/>';
   h += '<rect x="62" y="328" width="804" height="312" rx="8" fill="#f3f6f4" stroke="#a9b7b0" stroke-width="2"/>';
   h += '<rect x="62" y="335" width="804" height="56" fill="var(--hall)"/>';
-  h += '<text x="470" y="386" font-size="14" font-weight="700" fill="var(--hall-ink)" text-anchor="middle">Pasillo de consultorios</text>';
+  h += '<text x="80" y="354" font-size="14" font-weight="700" fill="var(--hall-ink)">Pasillo de consultorios</text>';
   ROOMS.forEach(function(r){
     var d = r.id && byId[r.id], sel = dest && r.id === dest.id;
     var fill = d ? COL[d.cat] : 'var(--c-staff)', op = dest && !sel && d ? 0.35 : 1;
@@ -197,13 +223,15 @@ function mapaPA(dest){
   h += nucleo();
   [150, 385, 600].forEach(function(x){ h += '<rect x="' + x + '" y="268" width="150" height="52" rx="6" fill="#8d7768"/><text x="' + (x + 75) + '" y="299" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">Sala de espera</text>'; });
   if (dest && dest.estado !== 'pendiente') {
-    var start = enPA ? KIOSCO.x + ',' + KIOSCO.y : '460,185', pts = null;
+    var start = enPA ? KIOSCO.x + ',' + KIOSCO.y : '460,185', pts = null, r = null;
     if (fs) pts = start + ' 310,176';
     else {
-      var r = ROOMS.filter(function(x){ return x.id === dest.id; })[0];
+      r = ROOMS.filter(function(x){ return x.id === dest.id; })[0];
       if (r) { var cx = r.x + r.w / 2; pts = start + ' 360,205 40,250 40,' + PASILLO_Y + ' ' + cx + ',' + PASILLO_Y + ' ' + cx + ',' + (r.y + 6); }
     }
-    if (pts) h += '<polyline class="route-line" points="' + pts + '" fill="none" stroke="var(--route)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="20 20"/>';
+    if (pts) h += huellas(pts);
+    if (fs) h += flecha(310, 108, 0);
+    else if (r) h += flecha(r.x + r.w / 2, r.y + 2, 0);
   }
   if (!enPA) h += '<text x="560" y="120" font-size="16" font-weight="700" fill="var(--route)">← llega por el elevador</text>';
   h += aqui(enPA) + '</svg>';
@@ -214,12 +242,13 @@ function mapaPB(dest){
   var enPB = kiosco === 'pb';
   var h = '<svg viewBox="20 60 860 620" role="img" aria-label="Mapa de planta baja">';
   h += '<rect x="430" y="255" width="40" height="300" fill="var(--hall)"/>';
-  h += '<text x="490" y="410" font-size="15" fill="var(--hall-ink)">pasillo de entrada</text>';
+  h += '<text x="420" y="410" font-size="15" fill="var(--hall-ink)" text-anchor="end">pasillo de entrada</text>';
   h += '<rect x="360" y="555" width="180" height="70" rx="10" fill="var(--accent)"/><text x="450" y="586" font-size="20" font-weight="700" fill="#fff" text-anchor="middle">ENTRADA</text><text x="450" y="608" font-size="13" fill="#fff" text-anchor="middle">con rampa</text>';
   [['urologia',70,300],['endoscopias',70,380],['wc-pb',70,460]].forEach(function(c){
     var d = byId[c[0]]; if (!d) return;
     var sel = dest && dest.id === c[0], x = c[1], y = c[2];
     h += '<rect x="' + x + '" y="' + y + '" width="230" height="64" rx="8" fill="' + (sel ? COL[d.cat] : '#fff') + '" stroke="' + (sel ? 'var(--route)' : '#a9b7b0') + '" stroke-width="' + (sel ? 5 : 2) + '" stroke-dasharray="7 5"/>';
+    if (sel) h += flecha(x + 240, y + 32, 90);
     h += '<text x="' + (x + 115) + '" y="' + (y + 30) + '" font-size="17" font-weight="700" fill="' + (sel ? '#fff' : '#10231c') + '" text-anchor="middle">' + esc(corto(d)) + '</text><text x="' + (x + 115) + '" y="' + (y + 50) + '" font-size="12" fill="' + (sel ? '#fff' : '#53655d') + '" text-anchor="middle">posición por verificar</text>';
   });
   h += '<rect x="600" y="300" width="230" height="244" rx="8" fill="var(--c-staff)"/><text x="715" y="425" font-size="16" font-weight="700" fill="#55625d" text-anchor="middle">Solo personal</text>';

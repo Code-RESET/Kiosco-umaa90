@@ -29,6 +29,8 @@ input{-webkit-user-select:text;user-select:text}
 header.top{background:var(--accent);color:var(--accent-ink);padding:1rem max(16px,1.2rem);display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap}
 .top h1{margin:0;font-size:1.8rem;letter-spacing:.01em}
 .top small{display:block;opacity:.85;font-size:.95rem}
+.marca{display:flex;align-items:center;gap:.6rem}
+.marca svg{width:2.6rem;height:2.6rem;flex:none}
 .floor-pill{background:rgba(255,255,255,.16);border-radius:999px;padding:.5rem 1rem;font-weight:700;font-size:1rem}
 main{flex:1;padding:1.2rem max(16px,1.2rem);display:flex;flex-direction:column;gap:1.1rem}
 .search{display:flex;align-items:center;gap:.6rem;background:var(--panel);border:2px solid var(--line);border-radius:14px;padding:.3rem .8rem}
@@ -79,9 +81,13 @@ footer.bottom{padding:.6rem max(16px,1.2rem);border-top:1px solid var(--line);di
 .reposo-sub{font-size:1.5rem;margin:.5rem 0 1.2rem;opacity:.92}
 .reposo-dest{font-size:1.6rem;font-weight:700;margin:0;background:rgba(255,255,255,.16);border-radius:12px;padding:.6rem 1rem;display:inline-block}
 
-@keyframes dash{to{stroke-dashoffset:-40}}
-.route-line{animation:dash 1.2s linear infinite}
+/* Huellas: aparecen una tras otra, como si alguien caminara */
+@keyframes paso{0%{opacity:0}6%{opacity:1}55%{opacity:1}75%{opacity:0}100%{opacity:0}}
+.huella{opacity:0;animation-name:paso;animation-timing-function:linear;animation-iteration-count:infinite}
+/* Flecha del destino: rebota para llamar la atención */
+@keyframes rebote{0%,100%{transform:translateY(-14px)}50%{transform:translateY(0)}}
+.flecha{animation:rebote .9s ease-in-out infinite}
 @keyframes pulse{0%,100%{r:13}50%{r:19}}
 .here-dot{animation:pulse 1.6s ease-in-out infinite}
-@media (prefers-reduced-motion:reduce){.route-line,.here-dot{animation:none}}
+@media (prefers-reduced-motion:reduce){.here-dot,.flecha{animation:none}.huella{animation:none;opacity:1}}
 @media (max-width:460px){.quick{grid-template-columns:1fr}.dest h2{font-size:1.6rem}}

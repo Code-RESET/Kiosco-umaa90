@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-  Kiosco de orientación · UMAA 90 (IMSS, Torreón)
+  Tu Guía Maps IMSS · kiosco de orientación UMAA 90 (Torreón)
   Autor y responsable del contenido: Ing. Luis Ángel Díaz Bernal
   Versión: ver version.json
 -->
@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#0b6b4f">
 <meta name="robots" content="noindex, nofollow">
-<title>Orientación UMAA 90</title>
+<title>Tu Guía Maps IMSS · UMAA 90</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icons/icono.svg" type="image/svg+xml">
 <link rel="preload" href="fonts/atkinson-hyperlegible-400.woff2" as="font" type="font/woff2" crossorigin>
@@ -20,7 +20,7 @@
 <body>
 <div class="screen" id="screen">
   <header class="top">
-    <div><h1>¿A dónde va?</h1><small>Orientación · UMAA 90</small></div>
+    <div class="marca"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 6c-10 0-18 8-18 18 0 13 18 34 18 34s18-21 18-34c0-10-8-18-18-18z" fill="#fff"/><circle cx="32" cy="24" r="7" fill="#0b6b4f"/></svg><div><h1>Tu Guía Maps IMSS</h1><small>UMAA 90 · ¿A dónde va?</small></div></div>
     <div class="floor-pill" id="floorPill" aria-live="polite">Usted está en: Planta baja</div>
   </header>
   <main id="main"><p class="empty">Cargando…</p></main>
@@ -33,8 +33,8 @@
 <!-- Pantalla de reposo: aparece tras unos minutos sin uso y se mueve para no marcar la pantalla -->
 <div class="reposo" id="reposo" hidden>
   <div class="reposo-card" id="reposoCard">
-    <p class="reposo-titulo">¿A dónde va?</p>
-    <p class="reposo-sub">Toque la pantalla para encontrar su destino</p>
+    <p class="reposo-titulo">Tu Guía Maps IMSS</p>
+    <p class="reposo-sub">¿A dónde va? Toque la pantalla para encontrar su destino</p>
     <p class="reposo-dest" id="reposoDest"></p>
   </div>
 </div>

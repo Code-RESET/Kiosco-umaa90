@@ -1,6 +1,6 @@
 {
-  "name": "Orientación UMAA 90",
-  "short_name": "UMAA 90",
+  "name": "Tu Guía Maps IMSS · UMAA 90",
+  "short_name": "Tu Guía IMSS",
   "description": "Mapa y rutas para pacientes y visitantes de la UMAA 90.",
   "lang": "es-MX",
   "start_url": "./index.html",
@@ -9,5 +9,12 @@
   "orientation": "portrait",
   "background_color": "#f6f8f6",
   "theme_color": "#0b6b4f",
-  "icons": [{"src": "icons/icono.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"}]
+  "icons": [
+    {
+      "src": "icons/icono.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
 }
