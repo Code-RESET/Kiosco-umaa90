@@ -313,9 +313,10 @@ function mapaPB(dest){
   h += '<rect x="480" y="395" width="40" height="135" fill="var(--hall)"/>';                       // baja a la rampa
   h += '<rect x="420" y="490" width="505" height="40" fill="var(--hall)"/>';                       // andador de consultorios
   h += '<text x="560" y="485" font-size="13" font-weight="700" fill="var(--hall-ink)">Pasillo de consultorios</text>';
-  // entrada lateral (por el sur, al vestíbulo)
-  h += '<rect x="165" y="460" width="40" height="70" fill="var(--hall)"/>';
-  h += '<rect x="125" y="530" width="120" height="52" rx="10" fill="var(--accent)"/><text x="185" y="554" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">ENTRADA</text><text x="185" y="572" font-size="11" fill="#fff" text-anchor="middle">lateral</text>';
+  // entrada lateral: al inicio del pasillo que sale del vestíbulo hacia el oriente (llega desde el norte)
+  h += '<rect x="250" y="340" width="40" height="58" fill="var(--hall)"/>';
+  h += '<rect x="240" y="392" width="60" height="6" fill="var(--accent)"/>';
+  h += '<rect x="215" y="286" width="110" height="54" rx="10" fill="var(--accent)"/><text x="270" y="310" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">ENTRADA</text><text x="270" y="328" font-size="11" fill="#fff" text-anchor="middle">lateral</text>';
   // rampa a Admisión
   h += '<text x="470" y="470" font-size="13" font-weight="700" fill="var(--c-cons)" text-anchor="end">♿ Rampa</text>';
   // rampa de discapacidad (zona norte del andador)
