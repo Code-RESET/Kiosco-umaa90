@@ -348,7 +348,6 @@ function mapaPB(dest){
     }
   }
   h += '<g transform="translate(' + PB_DX + ',0)">' + nucleo() + aqui(enPB) + '</g>';
-  h += '<text x="20" y="640" font-size="12" fill="#53655d">Borrador según croquis de campo · por verificar en sitio.</text>';
   h += '</svg>';
   return h;
 }
