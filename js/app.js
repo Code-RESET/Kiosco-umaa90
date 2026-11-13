@@ -150,8 +150,14 @@ function renderRuta(d){
   var cruza = d.piso !== kiosco, aviso = '';
   if (d.estado === 'pendiente') aviso = '<div class="warnbox"><b>Ubicación por confirmar.</b> Aún no tenemos la ruta exacta a ' + esc(d.nombre) + '. Está en el ' + pisoTxt(d.piso) + '; pregunte en la ventanilla más cercana.</div>';
   else if (d.estado === 'plano') aviso = '<div class="warnbox"><b>Ruta por verificar.</b> Si no encuentra el lugar, pregunte en Recepción.</div>';
-  var mapa = d.piso === 'pa' ? mapaPA(d) + leyenda(d) : mapaPB(d);
-  var zoomBtn = (d.piso === 'pa' && d.estado !== 'pendiente') ? '<button class="mapbtn" type="button" data-zoom>' + (mapaCompleto ? '🔍 Acercar al destino' : '🗺️ Ver mapa completo') + '</button>' : '';
+  // Dos vistas: el piso completo (para ubicarse) y un acercamiento (para ver la puerta)
+  var mapa;
+  if (d.piso === 'pa') {
+    mapa = '<p class="maptit">' + (kiosco === 'pa' ? '📍 Usted está aquí → su destino' : '🛗 Al salir del elevador → su destino') + '</p>' + mapaPA(d, false);
+    if (d.estado !== 'pendiente') mapa += '<p class="maptit">🔍 Acercamiento a su destino</p><div class="zoombox">' + mapaPA(d, true) + '</div>';
+    mapa += leyenda(d);
+  } else mapa = mapaPB(d);
+  var zoomBtn = '';
   var ayuda = d.id === 'recepcion' ? '' : '<button class="ayuda" type="button" data-go="recepcion"><b>¿No lo encuentra?</b> Pregunte en Recepción · Puerta 9 · 1er piso</button>';
   var lista = d.estado === 'pendiente' ? '' : '<ol class="steps">' + pasos(d).map(function(p){
       return '<li><span>' + p.t + (p.f ? '<img class="foto" src="fotos/' + p.f + '.jpg" alt="Foto de referencia" loading="lazy">' : '') + '</span></li>';
@@ -224,10 +230,10 @@ function escalera(x, y){
   return h;
 }
 
-function mapaPA(dest){
+function mapaPA(dest, zoom){
   var enPA = kiosco === 'pa';
   var vb = '0 60 920 650';
-  if (dest && !mapaCompleto) {
+  if (dest && zoom) {
     if (dest.id === 'farmacia' || dest.id === 'archivo') vb = '200 70 420 290';
     else {
       var rz = ROOMS.filter(function(x){ return x.id === dest.id; })[0];
@@ -312,7 +318,6 @@ document.body.addEventListener('click', function(e){
   if (go) { vista = {t:'ruta', id:go.getAttribute('data-go')}; mapaCompleto = false; render(); window.scrollTo(0, 0); return; }
   var cb = e.target.closest('[data-cat]');
   if (cb) { var c = cb.getAttribute('data-cat'); vista = {t:'inicio', q:'', cat:(vista.cat === c ? '' : c)}; render(); return; }
-  if (e.target.closest('[data-zoom]')) { mapaCompleto = !mapaCompleto; render(); return; }
   if (e.target.closest('[data-home]')) { vista = {t:'inicio', q:''}; render(); window.scrollTo(0, 0); return; }
   var p = e.target.closest('[data-piso]');
   if (p) { kiosco = p.getAttribute('data-piso'); render(); return; }
