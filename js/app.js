@@ -174,14 +174,18 @@ function huellas(pts){
     var nx = -dy / L, ny = dx / L;                        // perpendicular: pie izquierdo / derecho
     for (var t = (i ? paso / 2 : 14); t < L; t += paso) {
       var lado = lista.length % 2 ? 1 : -1;
-      lista.push({x: x1 + dx * t / L + nx * 9 * lado, y: y1 + dy * t / L + ny * 9 * lado, a: ang});
+      lista.push({x: x1 + dx * t / L + nx * 9 * lado, y: y1 + dy * t / L + ny * 9 * lado, a: ang, lado: lado});
     }
   }
   var n = lista.length, ciclo = Math.max(2.4, n * 0.11 + 1.2);
-  return lista.map(function(f, k){
+  var pie = '<defs><g id="pie" transform="scale(1.35)">' +
+    '<path d="M-4 9 C-6 4 -6 -2 -4.5 -6 C-3 -10 3 -10 4.5 -6 C6 -1 5 5 3 9 C1.5 12.5 -2.5 12.5 -4 9 Z" fill="var(--route)"/>' +
+    '<circle cx="-3.6" cy="-12.2" r="1.9" fill="var(--route)"/><circle cx="-0.8" cy="-13.6" r="1.6" fill="var(--route)"/>' +
+    '<circle cx="1.8" cy="-13.3" r="1.4" fill="var(--route)"/><circle cx="4" cy="-12" r="1.2" fill="var(--route)"/></g></defs>';
+  return pie + lista.map(function(f, k){
     return '<g transform="translate(' + f.x.toFixed(1) + ',' + f.y.toFixed(1) + ') rotate(' + f.a.toFixed(0) + ')">' +
       '<g class="huella" style="animation-duration:' + ciclo.toFixed(2) + 's;animation-delay:' + (k * 0.11).toFixed(2) + 's">' +
-      '<ellipse cx="0" cy="3" rx="5.5" ry="8.5" fill="var(--route)"/><ellipse cx="0" cy="-9" rx="4.5" ry="4" fill="var(--route)"/></g></g>';
+      '<use href="#pie" transform="scale(' + (f.lado > 0 ? -1 : 1) + ',1)"/></g></g>';
   }).join('');
 }
 /* Flecha grande que apunta al destino (dir: grados; 0 = hacia abajo) */
