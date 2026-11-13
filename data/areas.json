@@ -133,7 +133,7 @@
       "nombre": "Quimioterapia",
       "piso": "pa",
       "cat": "trat",
-      "estado": "plano",
+      "estado": "ok",
       "sinonimos": "quimio",
       "orden": 11
     },
