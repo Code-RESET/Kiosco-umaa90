@@ -169,7 +169,7 @@ function renderRuta(d){
   var zoomBtn = '';
   var ayudaId = d.piso === 'pb' ? 'admision' : 'recepcion';
   var ayuda = d.id === ayudaId ? '' : '<button class="ayuda" type="button" data-go="' + ayudaId + '"><b>¿No lo encuentra?</b> ' +
-    (d.piso === 'pb' ? 'Pregunte en el Módulo de Admisión · Planta baja' : 'Pregunte en Recepción · Puerta 9 · 1er piso') + '</button>';
+    (d.piso === 'pb' ? 'Pregunte en el Módulo de Admisión · Planta baja' : 'Pregunte en Recepción · Puerta 8 · 1er piso') + '</button>';
   var lista = d.estado === 'pendiente' ? '' : '<ol class="steps">' + pasos(d).map(function(p){
       return '<li><span>' + p.t + (p.f ? '<img class="foto" src="fotos/' + p.f + '.jpg" alt="Foto de referencia" loading="lazy">' : '') + '</span></li>';
     }).join('') + '</ol>';
@@ -252,7 +252,7 @@ function mapaPA(dest, zoom){
   if (dest && zoom) {
     if (dest.id === 'farmacia' || dest.id === 'archivo') vb = '200 70 420 290';
     else {
-      var rz = ROOMS.filter(function(x){ return x.id === dest.id; })[0];
+      var rz = ROOMS.filter(function(x){ return x.id === dest.id || x.id === dest.mismoLugar; })[0];
       if (rz) { var x0 = Math.max(0, Math.min(920 - 440, rz.x + rz.w / 2 - 220)); vb = x0 + ' 245 440 380'; }
     }
   }
@@ -262,9 +262,9 @@ function mapaPA(dest, zoom){
   h += '<rect x="62" y="335" width="804" height="56" fill="var(--hall)"/>';
   h += '<text x="80" y="354" font-size="14" font-weight="700" fill="var(--hall-ink)">Pasillo de consultorios</text>';
   ROOMS.forEach(function(r){
-    var d = r.id && byId[r.id], sel = dest && r.id === dest.id;
+    var d = r.id && byId[r.id], sel = dest && (r.id === dest.id || r.id === dest.mismoLugar);
     var fill = d ? COL[d.cat] : 'var(--c-staff)', op = dest && !sel && d ? 0.35 : 1;
-    var cx = r.x + r.w / 2, name = d ? corto(d) : 'Solo personal', fs = name.length > 16 ? 12 : 13;
+    var cx = r.x + r.w / 2, name = d ? (r.t || corto(d)) : 'Solo personal', fs = name.length > 16 ? 12 : 13;
     h += '<rect x="' + r.x + '" y="' + r.y + '" width="' + r.w + '" height="' + r.h + '" fill="' + fill + '" opacity="' + op + '" stroke="' + (sel ? 'var(--route)' : '#fff') + '" stroke-width="' + (sel ? 6 : 3) + '"/>';
     h += '<text transform="translate(' + (cx + 4) + ',' + (r.y + r.h / 2 - 14) + ') rotate(-90)" font-size="' + fs + '" font-weight="700" fill="' + (d ? '#fff' : '#55625d') + '" text-anchor="middle" opacity="' + (op < 1 ? 0.85 : 1) + '">' + esc(name) + '</text>';
     if (d && d.orden) h += '<text x="' + cx + '" y="' + (r.y + r.h - 14) + '" font-size="' + (r.w < 45 ? 15 : 18) + '" font-weight="700" fill="#fff" text-anchor="middle" opacity="' + (op < 1 ? 0.85 : 1) + '">' + d.orden + '</text>';
@@ -281,7 +281,7 @@ function mapaPA(dest, zoom){
     var start = enPA ? KIOSCO.x + ',' + KIOSCO.y : '460,185', pts = null, r = null;
     if (fs) pts = start + ' 310,176';
     else {
-      r = ROOMS.filter(function(x){ return x.id === dest.id; })[0];
+      r = ROOMS.filter(function(x){ return x.id === dest.id || x.id === dest.mismoLugar; })[0];
       if (r) { var cx = r.x + r.w / 2; pts = start + ' 360,205 40,250 40,' + PASILLO_Y + ' ' + cx + ',' + PASILLO_Y + ' ' + cx + ',' + (r.y + 6); }
     }
     if (pts) h += huellas(pts);
@@ -440,7 +440,7 @@ Promise.all([
   D = data.areas;
   D.forEach(function(d){ byId[d.id] = d; });
   QUICK = data.masBuscados || [];
-  ROOMS = data.planoPA.cuartos.map(function(r){ return {id:r.id, x:r.x, w:r.w, y:395, h:215}; });
+  ROOMS = data.planoPA.cuartos.map(function(r){ return {id:r.id, x:r.x, w:r.w, t:r.t, y:395, h:215}; });
   render();
   actividad();
   setInterval(revisarVersion, REVISAR_VERSION);

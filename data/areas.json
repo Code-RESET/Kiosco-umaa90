@@ -113,8 +113,8 @@
       "estado": "ok",
       "sinonimos": "nebulizacion inhalo respiratoria",
       "orden": 8,
-      "indicacion": "En el pasillo de consultorios, frente a la <b>sala de espera central</b>, está la ventanilla de <b>Inhaloterapia</b>, junto a Recepción.",
-      "referencia": "Frente a la sala de espera central",
+      "indicacion": "En el pasillo de consultorios, frente a la <b>sala de espera central</b>, está la ventanilla de <b>Inhaloterapia</b> (ahí mismo es Recepción).",
+      "referencia": "Frente a la sala de espera central · Ahí mismo es Recepción",
       "foto": "inhalo"
     },
     {
@@ -125,9 +125,10 @@
       "cat": "apoyo",
       "estado": "ok",
       "sinonimos": "recepcion informes registro cita citas asistente asistentes medica ventanilla",
-      "orden": 9,
-      "indicacion": "En el pasillo de consultorios, frente a la <b>sala de espera central</b>, está el módulo de <b>Recepción</b> con las asistentes médicas, junto a Inhaloterapia.",
-      "referencia": "Frente a la sala de espera central"
+      "indicacion": "En el pasillo de consultorios, frente a la <b>sala de espera central</b>: <b>Recepción</b> está en la misma ventanilla de Inhaloterapia.",
+      "referencia": "Misma ventanilla de Inhaloterapia · Puerta 8",
+      "mismoLugar": "inhalo",
+      "foto": "inhalo"
     },
     {
       "id": "neumologia",
@@ -136,7 +137,7 @@
       "cat": "cons",
       "estado": "ok",
       "sinonimos": "pulmon pulmones respiracion asma neumologo",
-      "orden": 10,
+      "orden": 9,
       "referencia": "Después de Recepción",
       "foto": "neumologia"
     },
@@ -147,7 +148,7 @@
       "cat": "trat",
       "estado": "ok",
       "sinonimos": "quimio",
-      "orden": 11
+      "orden": 10
     },
     {
       "id": "oncologia",
@@ -156,7 +157,7 @@
       "cat": "cons",
       "estado": "ok",
       "sinonimos": "cancer oncologo",
-      "orden": 12,
+      "orden": 11,
       "foto": "oncologia"
     },
     {
@@ -166,7 +167,7 @@
       "cat": "cons",
       "estado": "ok",
       "sinonimos": "riñon riñones nefrologo",
-      "orden": 13,
+      "orden": 12,
       "foto": "nefrologia"
     },
     {
@@ -176,7 +177,7 @@
       "cat": "trat",
       "estado": "ok",
       "sinonimos": "dialisis hemodialisis riñon",
-      "orden": 14,
+      "orden": 13,
       "foto": "hemo",
       "referencia": "Hacia el fondo del pasillo"
     },
@@ -187,7 +188,7 @@
       "cat": "apoyo",
       "estado": "ok",
       "sinonimos": "trabajadora social tramites",
-      "orden": 15,
+      "orden": 14,
       "foto": "tsocial-nutricion",
       "referencia": "Al fondo, misma puerta doble que Nutrición"
     },
@@ -198,7 +199,7 @@
       "cat": "apoyo",
       "estado": "ok",
       "sinonimos": "dieta nutriologo nutriologa",
-      "orden": 16,
+      "orden": 15,
       "foto": "tsocial-nutricion",
       "referencia": "Al fondo, misma puerta doble que Trabajo Social"
     },
@@ -313,12 +314,8 @@
       {
         "id": "inhalo",
         "x": 417,
-        "w": 35
-      },
-      {
-        "id": "recepcion",
-        "x": 452,
-        "w": 35
+        "w": 70,
+        "t": "Inhaloterapia / Recepción"
       },
       {
         "id": "neumologia",
