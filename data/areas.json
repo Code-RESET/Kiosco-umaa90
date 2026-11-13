@@ -253,13 +253,23 @@
     },
     {
       "id": "wc-pb",
-      "nombre": "Sanitarios (planta baja)",
-      "corto": "Sanitarios",
+      "nombre": "Sanitario de hombres (planta baja)",
+      "corto": "Sanitario hombres",
       "piso": "pb",
       "cat": "serv",
       "estado": "ok",
-      "sinonimos": "baño baños wc sanitario",
-      "referencia": "Al fondo del pasillo de planta baja, junto a las escaleras"
+      "sinonimos": "baño baños wc sanitario hombre caballeros",
+      "referencia": "Al final del pasillo de consultorios, después de Urología, junto a la entrada principal"
+    },
+    {
+      "id": "wc-pb-m",
+      "nombre": "Sanitario de mujeres (planta baja)",
+      "corto": "Sanitario mujeres",
+      "piso": "pb",
+      "cat": "serv",
+      "estado": "ok",
+      "sinonimos": "baño baños wc sanitario mujer damas",
+      "referencia": "Al final del pasillo de consultorios, junto al sanitario de hombres"
     }
   ],
   "planoPA": {

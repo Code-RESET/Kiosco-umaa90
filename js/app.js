@@ -126,7 +126,8 @@ function pasos(d){
   var s = [];
   if (d.piso === 'pb') {
     if (kiosco === 'pa') s.push({t:'Baje a <b>planta baja</b> en el elevador.', f:'vestibulo-pa'});
-    s.push({t:'Baje por el pasillo y gire a la <b>derecha</b> en el pasillo de planta baja.'});
+    s.push({t:'Siga el pasillo del elevador hasta el vestíbulo y gire a la <b>derecha</b>.'});
+    s.push({t:'Al llegar a la rampa, baje al <b>pasillo de consultorios</b> y siga hacia la entrada principal.'});
     if (d.id === 'urologia' || d.id === 'endoscopias' || d.mismoLugar === 'endoscopias') s.push({t:'Busque la <b>puerta doble</b> con los letreros «Consultorio de Urología» y «Consultorio de Endoscopias».', f:d.foto});
     else s.push({t:'<b>' + esc(corto(d)) + '</b>: ' + esc(d.referencia || '') + '.', f:d.foto});
     if (d.extra) s.push(d.extra);
@@ -293,46 +294,61 @@ function mapaPA(dest, zoom){
   return h;
 }
 
-/* Planta baja (borrador según croquis de Angel, 13-nov-2026):
-   elevador → pasillo hacia abajo → pasillo a la derecha con Admisión, Endoscopías, Urología y Sanitarios; escaleras al fondo */
+/* Planta baja: calco del croquis a mano de Angel (13-nov-2026). Norte arriba, calle al oriente (derecha). */
+var PB_DX = -280;  // el núcleo del elevador se dibuja a la izquierda
 var PB_CUARTOS = [
-  {id:'admision',    x:395, w:110, t:'Admisión'},
-  {id:'endoscopias', x:525, w:110},
-  {id:'urologia',    x:635, w:110},
-  {id:'wc-pb',       x:765, w:95,  t:'Sanitarios'}
+  {id:'admision',    x:420, w:110, t:'Admisión'},
+  {id:'endoscopias', x:590, w:115, t:'Endo / Anest.'},
+  {id:'urologia',    x:710, w:85,  t:'Urología'},
+  {id:'wc-pb',       x:800, w:55,  t:'WC H'},
+  {id:'wc-pb-m',     x:855, w:55,  t:'WC M'}
 ];
 function mapaPB(dest){
-  var enPB = kiosco === 'pb', PY = 470;
-  var h = '<svg viewBox="20 60 1010 600" role="img" aria-label="Mapa de planta baja">';
-  h += '<rect x="430" y="255" width="40" height="235" fill="var(--hall)"/>';
-  h += '<rect x="380" y="450" width="520" height="40" fill="var(--hall)"/>';
-  h += '<text x="490" y="476" font-size="13" font-weight="700" fill="var(--hall-ink)">Pasillo de planta baja</text>';
-  // Entrada lateral: llega por un costado al pasillo que baja del elevador
-  h += '<rect x="270" y="340" width="165" height="40" fill="var(--hall)"/>';
-  h += '<rect x="130" y="330" width="140" height="60" rx="10" fill="var(--accent)"/><text x="200" y="357" font-size="17" font-weight="700" fill="#fff" text-anchor="middle">ENTRADA</text><text x="200" y="376" font-size="12" fill="#fff" text-anchor="middle">lateral</text>';
+  var enPB = kiosco === 'pb', WY = 510;
+  var h = '<svg viewBox="0 60 1080 590" role="img" aria-label="Mapa de planta baja">';
+  // pasillos (mismo trazo que el croquis)
+  h += '<rect x="150" y="255" width="40" height="150" fill="var(--hall)"/>';                       // baja del elevador
+  h += '<rect x="135" y="385" width="100" height="75" rx="6" fill="var(--hall)" stroke="#d6c37a" stroke-width="2"/>'; // vestíbulo
+  h += '<rect x="235" y="395" width="285" height="40" fill="var(--hall)"/>';                       // hacia el oriente
+  h += '<rect x="480" y="395" width="40" height="135" fill="var(--hall)"/>';                       // baja a la rampa
+  h += '<rect x="420" y="490" width="505" height="40" fill="var(--hall)"/>';                       // andador de consultorios
+  h += '<text x="560" y="485" font-size="13" font-weight="700" fill="var(--hall-ink)">Pasillo de consultorios</text>';
+  // entrada lateral (por el sur, al vestíbulo)
+  h += '<rect x="165" y="460" width="40" height="70" fill="var(--hall)"/>';
+  h += '<rect x="125" y="530" width="120" height="52" rx="10" fill="var(--accent)"/><text x="185" y="554" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">ENTRADA</text><text x="185" y="572" font-size="11" fill="#fff" text-anchor="middle">lateral</text>';
+  // rampa a Admisión
+  h += '<text x="470" y="470" font-size="13" font-weight="700" fill="var(--c-cons)" text-anchor="end">♿ Rampa</text>';
+  // rampa de discapacidad (zona norte del andador)
+  h += '<rect x="640" y="380" width="240" height="85" rx="8" fill="#e3edf7" stroke="var(--c-cons)" stroke-width="2" stroke-dasharray="6 4"/>' +
+       '<text x="760" y="428" font-size="15" font-weight="700" fill="var(--c-cons)" text-anchor="middle">♿ Rampa discapacidad</text>';
+  // consultorios al sur del andador
   PB_CUARTOS.forEach(function(c){
     var d = byId[c.id]; if (!d) return;
     var sel = dest && (dest.id === c.id || dest.mismoLugar === c.id), op = dest && !sel ? 0.45 : 1;
-    h += '<rect x="' + c.x + '" y="492" width="' + (c.w - 6) + '" height="90" rx="6" fill="' + COL[d.cat] + '" opacity="' + op + '" stroke="' + (sel ? 'var(--route)' : '#fff') + '" stroke-width="' + (sel ? 6 : 3) + '"/>';
-    h += '<text x="' + (c.x + (c.w - 6) / 2) + '" y="542" font-size="15" font-weight="700" fill="#fff" text-anchor="middle" opacity="' + (op < 1 ? 0.85 : 1) + '">' + esc(c.t || corto(d)) + '</text>';
-    if (sel) h += flecha(c.x + (c.w - 6) / 2, 488, 0);
+    h += '<rect x="' + c.x + '" y="532" width="' + (c.w - 5) + '" height="80" rx="6" fill="' + COL[d.cat] + '" opacity="' + op + '" stroke="' + (sel ? 'var(--route)' : '#fff') + '" stroke-width="' + (sel ? 6 : 3) + '"/>';
+    h += '<text x="' + (c.x + (c.w - 5) / 2) + '" y="577" font-size="' + (c.w < 70 ? 13 : 14) + '" font-weight="700" fill="#fff" text-anchor="middle" opacity="' + (op < 1 ? 0.85 : 1) + '">' + esc(c.t || corto(d)) + '</text>';
+    if (sel) h += flecha(c.x + (c.w - 5) / 2, 528, 0);
   });
-  h += escalera(810, 375) + '<text x="831" y="368" font-size="14" font-weight="700" fill="var(--c-serv)" text-anchor="middle">Escaleras</text>';
-  // Entrada principal desde la calle (oriente), con Mando de Vigilancia
-  h += '<rect x="900" y="410" width="125" height="120" rx="10" fill="var(--accent)"/>' +
-    '<text x="962" y="448" font-size="16" font-weight="700" fill="#fff" text-anchor="middle">ENTRADA</text>' +
-    '<text x="962" y="468" font-size="16" font-weight="700" fill="#fff" text-anchor="middle">PRINCIPAL</text>' +
-    '<text x="962" y="492" font-size="11" fill="#fff" text-anchor="middle">desde la calle</text>' +
-    '<text x="962" y="510" font-size="11" fill="#fff" text-anchor="middle">Mando de Vigilancia</text>';
-  h += '<text x="447" y="606" font-size="13" font-weight="700" fill="var(--c-cons)" text-anchor="middle">♿ Rampa</text>';
-  h += '<text x="1022" y="400" font-size="12" fill="#53655d" text-anchor="end">↑ N</text>';
-  h += '<rect x="560" y="320" width="230" height="110" rx="8" fill="#8d7768"/><text x="675" y="381" font-size="17" font-weight="700" fill="#fff" text-anchor="middle">Sala de espera</text>';
+  // entrada principal desde la calle
+  h += '<rect x="925" y="440" width="95" height="180" rx="10" fill="var(--accent)"/>' +
+       '<text x="972" y="500" font-size="14" font-weight="700" fill="#fff" text-anchor="middle">ENTRADA</text>' +
+       '<text x="972" y="518" font-size="14" font-weight="700" fill="#fff" text-anchor="middle">UMAA</text>' +
+       '<text x="972" y="545" font-size="10" fill="#fff" text-anchor="middle">Mando de</text><text x="972" y="558" font-size="10" fill="#fff" text-anchor="middle">Vigilancia</text>';
+  h += '<line x1="1035" y1="300" x2="1035" y2="640" stroke="#a9b7b0" stroke-width="3"/><line x1="1065" y1="300" x2="1065" y2="640" stroke="#a9b7b0" stroke-width="3"/>' +
+       '<text transform="translate(1056,470) rotate(-90)" font-size="13" fill="#53655d" text-anchor="middle">Calle</text>';
+  h += '<text x="1050" y="250" font-size="14" font-weight="700" fill="#53655d" text-anchor="middle">N</text><path d="M1050 256 l-7 16 h14 z" fill="#53655d"/>';
+  // ruta
   if (dest && dest.estado !== 'pendiente') {
     var c = PB_CUARTOS.filter(function(x){ return x.id === dest.id || x.id === dest.mismoLugar; })[0];
-    if (c) { var cx = c.x + (c.w - 6) / 2; h += huellas((enPB ? KIOSCO.x + ',' + KIOSCO.y + ' 450,240' : '460,185 450,240') + ' 450,' + PY + ' ' + cx + ',' + PY); }
+    if (c) {
+      var cx = c.x + (c.w - 5) / 2;
+      var start = enPB ? (KIOSCO.x + PB_DX) + ',' + KIOSCO.y : (460 + PB_DX) + ',185';
+      h += huellas(start + ' 170,250 170,415 500,415 500,' + WY + ' ' + cx + ',' + WY);
+    }
   }
-  h += '<text x="40" y="650" font-size="12" fill="#53655d">Borrador: distribución según croquis, por verificar en sitio.</text>';
-  h += nucleo() + aqui(enPB) + '</svg>';
+  h += '<g transform="translate(' + PB_DX + ',0)">' + nucleo() + aqui(enPB) + '</g>';
+  h += '<text x="20" y="640" font-size="12" fill="#53655d">Borrador según croquis de campo · por verificar en sitio.</text>';
+  h += '</svg>';
   return h;
 }
 
