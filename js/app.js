@@ -124,7 +124,11 @@ function renderInicio(){
 
 function pasos(d){
   var s = [];
-  if (d.piso === 'pb') { s.push({t:'Este servicio está en esta planta baja.'}); return s; }
+  if (d.piso === 'pb') {
+    if (kiosco === 'pa') s.push({t:'Baje a <b>planta baja</b> en el elevador.', f:'vestibulo-pa'});
+    s.push({t:'Busque la <b>puerta doble</b> con los letreros «Consultorio de Urología» y «Consultorio de Endoscopias».', f:d.foto});
+    return s;
+  }
   if (kiosco === 'pb') {
     s.push({t:'Suba al <b>1er piso</b> en el elevador que está a su derecha.', f:'elevador-pb'});
     s.push({t:'Al salir del elevador, busque el kiosco del 1er piso y la Farmacia junto a él.', f:'vestibulo-pa'});
