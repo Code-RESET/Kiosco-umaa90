@@ -97,6 +97,16 @@ footer.bottom{padding:.6rem max(16px,1.2rem);border-top:1px solid var(--line);di
 .fab-inicio:active{transform:scale(.96)}
 main{padding-bottom:6rem}
 
+/* Código QR para llevar la ruta en el celular */
+.qrbox{display:flex;align-items:center;gap:1rem;background:var(--panel);border:2px solid var(--accent);border-radius:14px;padding:.8rem}
+.qrbox svg{flex:none;width:9rem;height:9rem;background:#fff}
+.qrbox p{margin:0;font-size:1.15rem;line-height:1.4}
+.qrbox b{display:block;font-size:1.3rem;color:var(--accent);margin-bottom:.2rem}
+/* Modo celular: solo la ruta, sin botón de inicio */
+.movil .fab-inicio{display:none}
+.movil main{padding-bottom:1.2rem}
+p.ayuda{margin:0}
+
 /* Pantalla de reposo */
 .reposo{position:fixed;inset:0;background:var(--accent);z-index:50;overflow:hidden}
 .reposo-card{position:absolute;left:10%;top:15%;max-width:80%;color:#fff;transition:left 6s ease-in-out,top 6s ease-in-out}

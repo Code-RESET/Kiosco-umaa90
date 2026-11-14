@@ -6,6 +6,7 @@
     index.html?kiosco=pb   → tótem de planta baja
     index.html?kiosco=pa   → tótem del 1er piso
     &demo=1                → muestra botones de piso y el panel de estado (solo para pruebas)
+    index.html?desde=pb&destino=quimio → modo celular: solo la ruta a ese destino (lo abre el código QR)
 */
 (function(){
 "use strict";
@@ -13,8 +14,14 @@
 /* ---------- Configuración ---------- */
 var params = new URLSearchParams(location.search);
 var hashPiso = location.hash.replace('#','');
-var kiosco = (params.get('kiosco') || hashPiso) === 'pa' ? 'pa' : 'pb';
+var MOVIL = !params.get('kiosco') && !!params.get('destino');   // abierto desde el QR en un celular
+var kiosco = (params.get('kiosco') || params.get('desde') || hashPiso) === 'pa' ? 'pa' : 'pb';
 var DEMO = params.get('demo') === '1';
+// Código QR en la pantalla de la ruta. Mientras no haya autorización del director, solo se ve con &demo=1.
+// Para activarlo en los tótems cambie false por true.
+var QR_PUBLICO = false;
+var VER_QR = !MOVIL && (QR_PUBLICO || DEMO);
+if (MOVIL) document.body.classList.add('movil');
 var INACTIVO_INICIO = 60 * 1000;      // regresa al inicio tras 1 min sin uso
 var INACTIVO_REPOSO = 3 * 60 * 1000;  // pantalla de reposo tras 3 min sin uso
 var REVISAR_VERSION = 15 * 60 * 1000; // busca versión nueva cada 15 min
@@ -83,7 +90,12 @@ var CATEGORIAS = [
 var verPanel = false;
 
 function render(){
-  document.getElementById('floorPill').textContent = 'Usted está en: ' + pisoTxt(kiosco);
+  document.getElementById('floorPill').textContent = (MOVIL ? 'Ruta desde: ' : 'Usted está en: ') + pisoTxt(kiosco);
+  if (MOVIL) {
+    var dm = byId[params.get('destino')];
+    if (!dm) { registrarError('Destino del QR no existe: ' + params.get('destino')); $main.innerHTML = '<div class="warnbox"><b>No reconocimos este código.</b> Use el tótem o pregunte en Recepción, en el 1er piso.</div>'; return; }
+    return renderRuta(dm);
+  }
   if (vista.t === 'ruta') renderRuta(byId[vista.id]);
   else renderInicio();
   pintarDemo();
@@ -162,14 +174,15 @@ function renderRuta(d){
   // Dos vistas: el piso completo (para ubicarse) y un acercamiento (para ver la puerta)
   var mapa;
   if (d.piso === 'pa') {
-    mapa = '<p class="maptit">' + (kiosco === 'pa' ? '📍 Usted está aquí → su destino' : '🛗 Al salir del elevador → su destino') + '</p>' + mapaPA(d, false);
+    mapa = '<p class="maptit">' + (MOVIL ? (kiosco === 'pa' ? '📍 Del tótem del 1er piso → su destino' : '🛗 Al salir del elevador → su destino') : kiosco === 'pa' ? '📍 Usted está aquí → su destino' : '🛗 Al salir del elevador → su destino') + '</p>' + mapaPA(d, false);
     if (d.estado !== 'pendiente') mapa += '<p class="maptit">🔍 Acercamiento a su destino</p><div class="zoombox">' + mapaPA(d, true) + '</div>';
     mapa += leyenda(d);
   } else mapa = mapaPB(d);
   var zoomBtn = '';
   var ayudaId = d.piso === 'pb' ? 'admision' : 'recepcion';
-  var ayuda = d.id === ayudaId ? '' : '<button class="ayuda" type="button" data-go="' + ayudaId + '"><b>¿No lo encuentra?</b> ' +
-    (d.piso === 'pb' ? 'Pregunte en el Módulo de Admisión · Planta baja' : 'Pregunte en Recepción · Puerta 8 · 1er piso') + '</button>';
+  var ayudaTxt = '<b>¿No lo encuentra?</b> ' + (d.piso === 'pb' ? 'Pregunte en el Módulo de Admisión · Planta baja' : 'Pregunte en Recepción · Puerta 8 · 1er piso');
+  // En el celular la ayuda es solo texto: la página muestra únicamente la ruta escaneada
+  var ayuda = d.id === ayudaId ? '' : MOVIL ? '<p class="ayuda">' + ayudaTxt + '</p>' : '<button class="ayuda" type="button" data-go="' + ayudaId + '">' + ayudaTxt + '</button>';
   var lista = d.estado === 'pendiente' ? '' : '<ol class="steps">' + pasos(d).map(function(p){
       return '<li><span>' + p.t + (p.f ? '<img class="foto" src="fotos/' + p.f + '.jpg" alt="Foto de referencia" loading="lazy">' : '') + '</span></li>';
     }).join('') + '</ol>';
@@ -178,9 +191,25 @@ function renderRuta(d){
     '<p class="resumen">' + resumen(d) + '</p>' +
     (d.horario ? '<p class="horario">🕒 ' + esc(d.horario) + '</p>' : '') +
     (cruza ? '<div class="dest"><span class="badge acc">♿ Ruta por elevador</span></div>' : '') +
+    (VER_QR ? qrHTML(d) : '') +
     aviso + '<div class="mapbox">' + mapa + zoomBtn + '</div>' + lista + ayuda +
-    '<div class="actions"><button class="big" type="button" data-home>Volver al inicio</button></div>' +
+    (MOVIL ? '' : '<div class="actions"><button class="big" type="button" data-home>Volver al inicio</button></div>') +
     (verPanel ? panelEstado() : '');
+}
+
+/* ---------- Código QR: lleva la ruta al celular ---------- */
+function urlMovil(d){
+  return location.origin + location.pathname + '?desde=' + kiosco + '&destino=' + encodeURIComponent(d.id);
+}
+function qrHTML(d){
+  if (typeof qrcode !== 'function') { registrarError('No cargó el generador de QR'); return ''; }
+  try {
+    var qr = qrcode(0, 'M');
+    qr.addData(urlMovil(d));
+    qr.make();
+    return '<div class="qrbox">' + qr.createSvgTag({cellSize:4, margin:2, scalable:true}) +
+      '<p><b>📱 Lleve la ruta en su celular</b>Abra la cámara y apunte a este código. Verá estos mismos pasos en su teléfono.</p></div>';
+  } catch(e) { registrarError('QR: ' + e.message); return ''; }
 }
 
 function resumen(d){
@@ -235,10 +264,11 @@ function flecha(x, y, dir){
 function aqui(on){
   // Punto "Usted se encuentra aquí": anillo que late + etiqueta con fondo para que se lea sobre cualquier color
   if (!on) return '';
+  var etiqueta = MOVIL ? 'Punto de partida' : 'Usted se encuentra aquí';
   return '<circle class="here-ring" cx="' + KIOSCO.x + '" cy="' + KIOSCO.y + '" r="16" fill="none" stroke="var(--here)" stroke-width="4"/>' +
     '<circle class="here-dot" cx="' + KIOSCO.x + '" cy="' + KIOSCO.y + '" r="15" fill="var(--here)" stroke="#fff" stroke-width="4"/>' +
     '<rect x="' + (KIOSCO.x - 112) + '" y="' + (KIOSCO.y + 22) + '" width="200" height="30" rx="15" fill="var(--here)"/>' +
-    '<text x="' + (KIOSCO.x - 12) + '" y="' + (KIOSCO.y + 43) + '" font-size="16" font-weight="700" fill="#fff" text-anchor="middle">Usted se encuentra aquí</text>';
+    '<text x="' + (KIOSCO.x - 12) + '" y="' + (KIOSCO.y + 43) + '" font-size="16" font-weight="700" fill="#fff" text-anchor="middle">' + etiqueta + '</text>';
 }
 function escalera(x, y){
   var h = '<rect x="' + x + '" y="' + y + '" width="42" height="58" rx="4" fill="#fff" stroke="var(--c-serv)" stroke-width="3"/>';
@@ -397,14 +427,14 @@ function actividad(){
   tInicio = setTimeout(function(){ vista = {t:'inicio', q:''}; verPanel = false; render(); window.scrollTo(0, 0); }, INACTIVO_INICIO);
   tReposo = setTimeout(mostrarReposo, INACTIVO_REPOSO);
 }
-['click','input','touchstart','keydown'].forEach(function(ev){ document.addEventListener(ev, actividad, {passive:true}); });
+if (!MOVIL) ['click','input','touchstart','keydown'].forEach(function(ev){ document.addEventListener(ev, actividad, {passive:true}); });
 // El toque que quita el reposo no debe abrir nada que esté debajo
 reposo.addEventListener('click', function(e){ e.stopPropagation(); e.preventDefault(); reposo.hidden = true; clearInterval(tMover); actividad(); });
 function inactivo(){ return !reposo.hidden; }
 
 /* ---------- Vigilante: pantalla vacía, versión nueva y recarga diaria ---------- */
 var inicioApp = Date.now();
-setInterval(function(){
+if (!MOVIL) setInterval(function(){
   if (!$main.children.length) recargar('pantalla vacía');
   var h = new Date();
   if (h.getHours() === 3 && h.getMinutes() < 5 && Date.now() - inicioApp > 60 * 60 * 1000) recargar('recarga diaria');
@@ -442,6 +472,7 @@ Promise.all([
   QUICK = data.masBuscados || [];
   ROOMS = data.planoPA.cuartos.map(function(r){ return {id:r.id, x:r.x, w:r.w, t:r.t, y:395, h:215}; });
   render();
+  if (MOVIL) return;   // en el celular: sin reposo, sin recargas automáticas
   actividad();
   setInterval(revisarVersion, REVISAR_VERSION);
 }).catch(function(e){

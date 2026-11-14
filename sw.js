@@ -3,10 +3,10 @@
   Autor: Ing. Luis Ángel Díaz Bernal
   IMPORTANTE: en cada entrega cambie VERSION aquí y en version.json (el mismo número).
 */
-var VERSION = '1.4.5';
+var VERSION = '1.5.0';
 var CACHE = 'kiosco-umaa90-' + VERSION;
 var ARCHIVOS = [
-  './', 'index.html', 'css/estilos.css', 'js/app.js', 'data/areas.json', 'version.json', 'manifest.json', 'icons/icono.svg',
+  './', 'index.html', 'css/estilos.css', 'js/app.js', 'js/qrcode.js', 'data/areas.json', 'version.json', 'manifest.json', 'icons/icono.svg',
   'fonts/atkinson-hyperlegible-400.woff2', 'fonts/atkinson-hyperlegible-700.woff2',
   'fotos/admision.jpg', 'fotos/archivo.jpg', 'fotos/bienvenidos.jpg', 'fotos/celosias.jpg', 'fotos/cirugia.jpg', 'fotos/consultorios.jpg', 'fotos/elevador-pb.jpg', 'fotos/entrada-admision.jpg', 'fotos/farmacia.jpg', 'fotos/hemo.jpg', 'fotos/inhalo.jpg', 'fotos/modulo.jpg', 'fotos/nefrologia.jpg', 'fotos/neumologia.jpg', 'fotos/oftalmologia.jpg', 'fotos/oncologia.jpg', 'fotos/ortopedia.jpg', 'fotos/otorrino.jpg', 'fotos/puertas-imss.jpg', 'fotos/tsocial-nutricion.jpg', 'fotos/urologia-endoscopias.jpg', 'fotos/vestibulo-pa.jpg', 'fotos/wc-hombres.jpg', 'fotos/wc-mujeres.jpg'
 ];
