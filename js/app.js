@@ -19,7 +19,7 @@ var kiosco = (params.get('kiosco') || params.get('desde') || hashPiso) === 'pa' 
 var DEMO = params.get('demo') === '1';
 // Código QR en la pantalla de la ruta. Mientras no haya autorización del director, solo se ve con &demo=1.
 // Para activarlo en los tótems cambie false por true.
-var QR_PUBLICO = true;
+var QR_PUBLICO = false;
 var VER_QR = !MOVIL && (QR_PUBLICO || DEMO);
 if (MOVIL) document.body.classList.add('movil');
 var INACTIVO_INICIO = 60 * 1000;      // regresa al inicio tras 1 min sin uso

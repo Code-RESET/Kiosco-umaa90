@@ -24,7 +24,7 @@ Cada tótem abre su propia dirección:
 | Planta baja | `…/index.html?kiosco=pb` |
 | 1er piso | `…/index.html?kiosco=pa` |
 
-**Código QR (modo celular):** en la pantalla de cada ruta aparece un QR que abre `…/index.html?desde=pb&destino=quimio` en el celular del paciente: solo la ruta a ese destino, sin inicio, sin reposo y sin recargas. El QR está activo en los tótems (`QR_PUBLICO = true` en `js/app.js`); para ocultarlo cambie `true` a `false`. El generador de QR (`js/qrcode.js`, Kazuhiko Arase, licencia MIT) va incluido y no usa internet.
+**Código QR (modo celular):** en la pantalla de cada ruta aparece un QR que abre `…/index.html?desde=pb&destino=quimio` en el celular del paciente: solo la ruta a ese destino, sin inicio, sin reposo y sin recargas. Mientras no haya autorización, el QR solo se ve con `&demo=1`; para mostrarlo en los tótems cambie `QR_PUBLICO = false` a `true` en `js/app.js`. El generador de QR (`js/qrcode.js`, Kazuhiko Arase, licencia MIT) va incluido y no usa internet.
 
 Para pruebas: agregue `&demo=1` a la dirección. Aparecen botones para cambiar de piso y el panel **Estado** con avisos de datos y errores.
 
